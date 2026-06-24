@@ -1,0 +1,32 @@
+{
+  "tool": "01-mining-rag-pipeline",
+  "url": "http://127.0.0.1:8001/",
+  "status": "passed",
+  "tested_at": "2026-06-23",
+  "checks": {
+    "answer_default_open": true,
+    "sources_default_collapsed": true,
+    "raw_json_default_collapsed": true,
+    "chinese_query_returns_chinese_answer": true,
+    "answer_uses_numbered_citations": true,
+    "business_answer_has_no_debug_relevance_terms": true,
+    "sources_include_title_excerpt_summary_link": true,
+    "abstain_path_returns_chinese_warning": true,
+    "raw_output_is_structured_backend_json": true,
+    "buttons_enabled_after_actions": true,
+    "placeholder_tokens": [],
+    "horizontal_overflow": false
+  },
+  "viewports": [
+    {"width": 1280, "height": 720, "horizontal_overflow": false},
+    {"width": 768, "height": 900, "horizontal_overflow": false},
+    {"width": 390, "height": 844, "horizontal_overflow": false}
+  ],
+  "interactions": [
+    "Loaded console and verified details state.",
+    "Ran Australia lithium price query and verified numbered citations.",
+    "Expanded Answer Sources and verified title, English excerpt, Chinese summary and link.",
+    "Ran DRC cobalt query and verified abstain / evidence-insufficient path.",
+    "Verified buttons returned to enabled state."
+  ]
+}

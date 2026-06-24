@@ -1,0 +1,15 @@
+services:
+  rag-api:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - APIMART_API_KEY=${APIMART_API_KEY:-}
+      - APIMART_BASE_URL=${APIMART_BASE_URL:-https://api.apimart.ai/v1}
+      - APIMART_MODEL=${APIMART_MODEL:-gemini-3.5-flash}
+    command: >
+      sh -c "python -m pipeline.ingest --out data/runtime --per-source 200 --fixture &&
+             uvicorn serve.app:app --host 0.0.0.0 --port 8001"

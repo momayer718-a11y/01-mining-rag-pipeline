@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "missing": [],
+  "placeholder_hits": [],
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 720,
+      "expected": "desktop"
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "expected": "tablet"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "expected": "mobile"
+    }
+  ]
+}

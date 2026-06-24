@@ -1,0 +1,23 @@
+[
+  {"question":"近 7 天澳洲锂出口政策有何变化?","expected_terms":["Australia","lithium","export","policy"]},
+  {"question":"Pilbara 锂矿的主要价格风险是什么?","expected_terms":["Pilbara","lithium","price"]},
+  {"question":"LME 铜价格最近受什么影响?","expected_terms":["copper","LME","inventories"]},
+  {"question":"镍价为什么承压?","expected_terms":["nickel","Indonesian","supply"]},
+  {"question":"铁矿石价格和中国钢厂有什么关系?","expected_terms":["iron ore","mills","restock"]},
+  {"question":"关键矿产政策关注哪些审批风险?","expected_terms":["permitting","approvals","water"]},
+  {"question":"稀土政策强调了什么?","expected_terms":["rare earth","traceability","quota"]},
+  {"question":"锌价近期趋势如何?","expected_terms":["zinc","sideways","mine"]},
+  {"question":"锂价为何趋稳?","expected_terms":["lithium","restocking","SHFE"]},
+  {"question":"铜供应风险来自哪里?","expected_terms":["copper","maintenance","Chile"]},
+  {"question":"澳洲关键矿产战略支持哪些环节?","expected_terms":["Australia","processing","finance"]},
+  {"question":"下游加工能力为什么重要?","expected_terms":["downstream","refining","capacity"]},
+  {"question":"MINING.com 新闻能覆盖什么?","expected_terms":["mining","lithium","copper"]},
+  {"question":"政策和价格如何共同影响项目?","expected_terms":["policy","price","investment"]},
+  {"question":"最近 30 天有哪些矿业主题?","expected_terms":["last 30 days","mining","critical minerals"]},
+  {"question":"Mysteel 铁矿石评估说明什么?","expected_terms":["Mysteel","iron ore","blast furnace"]},
+  {"question":"SHFE 碳酸锂趋势如何?","expected_terms":["SHFE","lithium carbonate","stabilized"]},
+  {"question":"稀土供应链有哪些监管关注?","expected_terms":["rare earth","environmental","consolidation"]},
+  {"question":"Pilbara 出货受哪些约束?","expected_terms":["Pilbara","shipments","port"]},
+  {"question":"矿业投资需要关注什么?","expected_terms":["investment","policy risk","price direction"]}
+]
+
