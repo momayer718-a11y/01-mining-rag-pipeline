@@ -11,5 +11,5 @@ services:
       - MODEL_BASE_URL=${MODEL_BASE_URL:-https://apihub.agnes-ai.com/v1}
       - MODEL_NAME=${MODEL_NAME:-agnes-2.0-flash}
     command: >
-      sh -c "python -m pipeline.ingest --out data/runtime --per-source 200 --fixture &&
+      sh -c "python -m pipeline.ingest --out data/runtime --per-source 20 &&
              uvicorn serve.app:app --host 0.0.0.0 --port 8001"

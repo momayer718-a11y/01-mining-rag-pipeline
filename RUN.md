@@ -7,14 +7,18 @@ cd /Users/Zhuanz/Desktop/面试题目MVP/01-mining-rag-pipeline
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-make demo
+make ingest
+make serve
 ```
 
-Start the Web console:
+Open `http://localhost:8001`.
+
+`make ingest` uses original public source URLs where reachable. It does not use fixture records.
+
+Optional one-shot CLI demo:
 
 ```bash
-make serve
-open http://localhost:8001
+python3 -m serve.query_engine "近 7 天澳洲锂出口政策有何变化?"
 ```
 
 ## Docker
@@ -42,10 +46,21 @@ The key is read from the environment only. Do not write real keys into project f
 ```bash
 curl -s http://localhost:8001/query \
   -H 'content-type: application/json' \
-  -d '{"question":"近 7 天澳洲锂出口价格有何变化?","top_k":5,"days":7}' | jq
+  -d '{"question":"近 7 天澳洲锂出口政策有何变化?","top_k":5,"days":7}' | jq
 ```
 
 Expected shape: Chinese `answer`, numbered `[1]` citations, citation rows with `命中段` / `概括` on the Web console, and a folded backend JSON block for audit.
+
+If LME/SHFE/Mysteel or DISR/S&P are inaccessible in the current network, expected status is `limited` or `abstain` with warnings. That is intentional; the app should not fake prices or policy changes.
+
+## Fixture Demo
+
+```bash
+make fixture-ingest
+python3 -m serve.query_engine "近 7 天澳洲锂出口政策有何变化?"
+```
+
+Fixture mode is for offline deterministic tests only. Normal Docker, `make ingest` and the Web console use real-first ingestion.
 
 ## QA And Package
 

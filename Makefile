@@ -1,7 +1,10 @@
-.PHONY: ingest serve eval test qa package demo
+.PHONY: ingest fixture-ingest serve eval test qa package demo
 
 ingest:
-	python3 -m pipeline.ingest --out data/runtime --per-source 200 --fixture
+	python3 -m pipeline.ingest --out data/runtime --per-source 20
+
+fixture-ingest:
+	python3 -m pipeline.ingest --out data/runtime --per-source 50 --fixture
 
 serve:
 	uvicorn serve.app:app --host 0.0.0.0 --port 8001

@@ -36,7 +36,7 @@ def stats() -> dict:
     store = LocalVectorStore("data/runtime")
     chunks = store.load_chunks()
     if not chunks:
-        run_ingest(out="data/runtime", per_source=200, fixture=True)
+        run_ingest(out="data/runtime", per_source=20, fixture=False)
         chunks = store.load_chunks()
     by_type: dict[str, int] = {}
     source_modes: dict[str, int] = {}
@@ -62,7 +62,7 @@ def stats() -> dict:
 
 @app.post("/ingest")
 def ingest_endpoint() -> dict:
-    return run_ingest(out="data/runtime", per_source=200, fixture=True)
+    return run_ingest(out="data/runtime", per_source=20, fixture=False)
 
 
 @app.get("/eval")
@@ -139,7 +139,7 @@ CONSOLE_HTML = """
           <div class="muted">示例：近 7 天澳洲锂出口政策有何变化?</div>
         </div>
         <div class="row">
-          <button id="ingestBtn" class="secondary" onclick="ingest()">重新采集样例数据</button>
+          <button id="ingestBtn" class="secondary" onclick="ingest()">重新采集原站数据</button>
           <button id="evalBtn" class="secondary" onclick="runEval()">运行评测</button>
         </div>
       </div>
@@ -191,7 +191,7 @@ CONSOLE_HTML = """
     async function ingest() {
       setBusy(ingestBtn, true, '采集中...');
       try {
-        raw.textContent = '正在采集并重建索引...';
+        raw.textContent = '正在采集 MINING.com、中国稀土集团、DISR 等原站数据并重建索引...';
         const data = await json('/ingest', {method:'POST'});
         raw.textContent = JSON.stringify(data, null, 2);
         await refreshStats();

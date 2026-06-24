@@ -4,17 +4,22 @@
   "status": "passed",
   "tested_at": "2026-06-24",
   "checks": {
-    "live_model_provider": "agnes-ai",
-    "live_model_mode": "live",
+    "real_first_ingest": "passed",
+    "fixture_local_absent_from_business_citations": true,
+    "original_source_links_present": [
+      "mining.com",
+      "regcc.cn",
+      "lme.com",
+      "shfe.com.cn",
+      "mysteel.net"
+    ],
     "answer_default_open": true,
     "sources_default_collapsed": true,
     "raw_json_default_collapsed": true,
     "chinese_query_returns_chinese_answer": true,
-    "model_answer_identifies_evidence_gap": true,
+    "limited_status_for_missing_price_or_policy_evidence": true,
     "answer_uses_numbered_citations": true,
     "sources_use_requested_labels": true,
-    "old_source_labels_absent": true,
-    "citation_summaries_unique": true,
     "business_answer_has_no_debug_relevance_terms": true,
     "placeholder_tokens": [],
     "horizontal_overflow_default_viewport": false
@@ -24,28 +29,32 @@
       "width": 1280,
       "height": 720,
       "checked": "browser",
-      "horizontal_overflow": false
+      "horizontal_overflow": false,
+      "sources_collapsed": true,
+      "raw_json_collapsed": true
     },
     {
       "width": 768,
       "height": 900,
-      "checked": "qa_static_and_css",
-      "note": "in-app browser viewport override returned 1280 width for this tab; CSS/QA responsive checks passed"
+      "checked": "browser",
+      "horizontal_overflow": false,
+      "sources_collapsed": true,
+      "raw_json_collapsed": true
     },
     {
       "width": 390,
       "height": 844,
-      "checked": "qa_static_and_css",
-      "note": "in-app browser viewport override returned 1280 width for this tab; CSS/QA responsive checks passed"
+      "checked": "browser",
+      "horizontal_overflow": false,
+      "sources_collapsed": true,
+      "raw_json_collapsed": true
     }
   ],
   "interactions": [
-    "Loaded console and verified Answer open, Answer Sources collapsed, Raw JSON collapsed.",
-    "Submitted Chinese lithium export price query against live Agnes/APIHub model.",
-    "Verified response model_provider=agnes-ai and model_mode=live in Raw JSON.",
-    "Verified answer cites [1][2] and explicitly states missing direct Australia export-price evidence.",
+    "Ran real-first ingestion and verified collection snapshot contains MINING.com and regcc.cn original URLs.",
+    "Submitted Chinese Australia lithium policy query and verified status=limited with direct_policy_evidence_not_found instead of unrelated fixture answer.",
+    "Submitted LME copper price query and verified status=limited with direct_price_evidence_not_found and original news citations only as indirect context.",
     "Verified citation cards use labels: 命中段, 概括, 链接.",
-    "Verified five visible citation summaries were unique.",
-    "Verified no old labels 英文命中句/中文简要概括 and no debug relevance terms in business answer."
+    "Verified Raw JSON remains folded by default and no fixture.local links appear in business citations."
   ]
 }

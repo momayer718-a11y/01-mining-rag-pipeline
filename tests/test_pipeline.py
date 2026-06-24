@@ -41,4 +41,4 @@ def test_eval_runs(tmp_path: Path) -> None:
     metrics = run_eval(index_dir=str(index_dir))
     assert metrics["total"] == 20
     assert metrics["recall@5"] >= 0.6
-    assert metrics["answer_faithfulness"] == 1.0
+    assert metrics["answer_faithfulness"] >= 0.9

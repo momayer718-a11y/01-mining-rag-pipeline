@@ -8,13 +8,15 @@ from pathlib import Path
 
 from pipeline.ingest import run_ingest
 from pipeline.store import LocalVectorStore
-from serve.intent import QueryIntent, parse_intent, preferred_source_types, terms_for
+from serve.intent import COMMODITY_TERMS, REGION_TERMS, QueryIntent, parse_intent, preferred_source_types, terms_for
 from serve.model_client import complete_json, model_metadata
 
 
 def ensure_index(index_dir: str = "data/runtime") -> None:
-    if not (Path(index_dir) / "chunks.jsonl").exists():
-        run_ingest(out=index_dir, per_source=200, fixture=True)
+    chunks_path = Path(index_dir) / "chunks.jsonl"
+    default_runtime = Path(index_dir) == Path("data/runtime")
+    if not chunks_path.exists() or (default_runtime and _fixture_only_index(index_dir)):
+        run_ingest(out=index_dir, per_source=20, fixture=False)
 
 
 def query(question: str, top_k: int = 5, days: int | None = None, index_dir: str = "data/runtime") -> dict:
@@ -54,10 +56,31 @@ def _filter_evidence(question: str, hits: list[dict], intent: QueryIntent, top_k
         warnings.append("unsupported_or_missing_source: " + ", ".join(intent.missing_dimensions))
     preferred = preferred_source_types(intent)
     enriched: list[dict] = []
+    fixture_enriched: list[dict] = []
     seen_urls: set[str] = set()
+    limited_sources: set[str] = set()
+    fixture_hits = 0
+    explicit_fixture = _explicit_fixture_index(hits)
+    used_fixture_answer = False
     for hit in hits:
         meta = hit["chunk"]["metadata"]
         url = meta.get("url", "")
+        mode = meta.get("source_mode", "")
+        if _is_fixture_source(meta):
+            fixture_hits += 1
+            if explicit_fixture:
+                relevance, matched_terms = _evidence_score(question, hit, intent)
+                if relevance > 0:
+                    row = dict(hit)
+                    row["evidence_relevance"] = relevance
+                    row["matched_terms"] = matched_terms
+                    row["source_reliability"] = "demo_fixture"
+                    row["source_priority"] = preferred.index(meta.get("source_type", "unknown")) if meta.get("source_type") in preferred else len(preferred)
+                    fixture_enriched.append(row)
+            continue
+        if meta.get("evidence_kind") == "source_status" or mode == "source_limited":
+            limited_sources.add(meta.get("source", "unknown"))
+            continue
         if url in seen_urls:
             continue
         seen_urls.add(url)
@@ -72,10 +95,20 @@ def _filter_evidence(question: str, hits: list[dict], intent: QueryIntent, top_k
         row["source_priority"] = preferred.index(source_type) if source_type in preferred else len(preferred)
         enriched.append(row)
     enriched.sort(key=lambda row: (row["source_priority"], -row["evidence_relevance"], -row.get("score", 0)))
-    selected = enriched[:top_k]
+    evidence_limit = _evidence_limit(intent, enriched, top_k)
+    selected = enriched[:evidence_limit]
+    if not selected and fixture_enriched:
+        fixture_enriched.sort(key=lambda row: (row["source_priority"], -row["evidence_relevance"], -row.get("score", 0)))
+        selected = fixture_enriched[:top_k]
+        used_fixture_answer = True
+        warnings.append("fixture_mode_answer: using explicit demo fixture index, not original-source evidence")
     source_types = {row["chunk"]["metadata"].get("source_type") for row in selected}
     if not selected:
         warnings.append("no_relevant_evidence_above_threshold")
+    if limited_sources:
+        warnings.append("source_access_limited: " + ", ".join(sorted(limited_sources)))
+    if fixture_hits and not used_fixture_answer:
+        warnings.append("fixture_sources_excluded_from_business_answer")
     if intent.intent == "price" and "price" not in source_types and intent.coverage_status == "supported":
         warnings.append("direct_price_evidence_not_found")
     if intent.intent == "policy" and "policy" not in source_types and intent.coverage_status == "supported":
@@ -109,9 +142,14 @@ def _supplemental_hits(store: LocalVectorStore, intent: QueryIntent, top_k: int,
 
 def _evidence_score(question: str, hit: dict, intent: QueryIntent) -> tuple[float, list[str]]:
     text = f"{hit['chunk']['metadata'].get('title', '')} {hit['chunk'].get('text', '')}".lower()
+    meta = hit["chunk"]["metadata"]
+    if not _dimension_matches(text, meta, intent):
+        return 0.0, []
+    if intent.commodity and _weak_commodity_match(text, meta, intent.commodity):
+        return 0.0, []
     query_terms = terms_for(intent)
     matched = [term for term in query_terms if term.lower() in text]
-    source_type = hit["chunk"]["metadata"].get("source_type")
+    source_type = meta.get("source_type")
     required = 1
     if intent.commodity:
         required += 1
@@ -120,9 +158,51 @@ def _evidence_score(question: str, hit: dict, intent: QueryIntent) -> tuple[floa
     base = min(1.0, len(set(matched)) / max(required, 1))
     if source_type == preferred_source_types(intent)[0]:
         base += 0.35
-    if intent.commodity and intent.commodity in hit["chunk"]["metadata"].get("commodity", ""):
+    if intent.commodity and intent.commodity in meta.get("commodity", ""):
         base += 0.25
     return round(base, 3), sorted(set(matched))
+
+
+def _evidence_limit(intent: QueryIntent, rows: list[dict], top_k: int) -> int:
+    if not rows:
+        return top_k
+    source_types = {row["chunk"]["metadata"].get("source_type") for row in rows[:top_k]}
+    if intent.intent == "price" and "price" not in source_types:
+        return min(top_k, 3)
+    if any(row["evidence_relevance"] < 0.8 for row in rows[:top_k]):
+        return min(top_k, 3)
+    return top_k
+
+
+def _dimension_matches(text: str, meta: dict, intent: QueryIntent) -> bool:
+    if intent.commodity and not _matches_terms(text, meta, intent.commodity, COMMODITY_TERMS):
+        return False
+    if intent.region and not _matches_terms(text, meta, intent.region, REGION_TERMS):
+        return False
+    return True
+
+
+def _matches_terms(text: str, meta: dict, value: str, mapping: dict[str, list[str]]) -> bool:
+    meta_values = " ".join(str(meta.get(key, "")) for key in ("commodity", "region", "source", "title")).lower()
+    haystack = f"{meta_values} {text}"
+    if value in haystack:
+        return True
+    return any(term.lower() in haystack for term in mapping.get(value, [value]))
+
+
+def _weak_commodity_match(text: str, meta: dict, commodity: str) -> bool:
+    declared = str(meta.get("commodity", "")).lower()
+    if declared == commodity:
+        return False
+    title = str(meta.get("title", "")).lower()
+    terms = [term.lower() for term in COMMODITY_TERMS.get(commodity, [commodity])]
+    title_hits = sum(title.count(term) for term in terms)
+    text_hits = sum(text.count(term) for term in terms)
+    if title_hits > 0:
+        return False
+    if str(meta.get("source_type", "")) == "news":
+        return text_hits < 3
+    return text_hits < 2
 
 
 def _build_citations(hits: list[dict], intent: QueryIntent) -> list[dict]:
@@ -154,6 +234,7 @@ def _compose_answer(question: str, intent: QueryIntent, citations: list[dict], s
                 "你是矿业行业 RAG 问答助手。你只能基于 citations 中的原文命中段进行中文回答，"
                 "不能编造 citations 之外的事实。回答要先给结论，再给关键依据、风险/限制、下一步建议；"
                 "每个关键判断后必须使用 [数字] 引用，数字必须对应 citations 的 id。"
+                "如果 citations 的链接不是目标问题的直接价格/政策/新闻原文，必须说明证据有限。"
                 "如果证据有限，要直接说明缺什么证据，不要硬凑。"
                 "同时为每条 citation 生成不同的中文概括，概括必须根据该条命中段和问题思考得出，不能套用同一句模板。"
                 "输出 JSON 字段：answer:string, answer_points:list, citation_summaries:list。"
@@ -322,15 +403,19 @@ def _conclusion(intent: QueryIntent, citations: list[dict], direct_gap: str | No
 
 def _basis(intent: QueryIntent, citations: list[dict]) -> str:
     source_labels = "、".join(_source_type_label(row["source_type"]) for row in citations[:3])
+    if intent.intent == "price" and citations[0]["source_type"] != "price":
+        return f"已检索到的{source_labels}来源只能作为间接背景，最相关证据来自“{citations[0]['title']}”，但它不是 LME/SHFE/Mysteel 数值行情"
+    if intent.intent == "policy" and citations[0]["source_type"] != "policy":
+        return f"已检索到的{source_labels}来源只能作为间接背景，最相关证据来自“{citations[0]['title']}”，但它不是目标政策原文"
     return f"已检索到的{source_labels}来源中，最直接的证据来自“{citations[0]['title']}”，其原文段落说明了与问题相关的市场或政策背景"
 
 
 def _risk(intent: QueryIntent, warnings: list[str]) -> str:
     if warnings:
-        return "；".join(warnings)
+        return _warning_text(warnings)
     if intent.intent == "price":
-        return "价格源为样例缓存，正式投资判断仍需替换为授权行情源"
-    return "当前为公开源和样例缓存结果，仍需结合一手公告、交易所/价格授权源和人工复核"
+        return "当前公开索引不包含授权行情数值，正式投资判断仍需接入交易所或价格服务授权源"
+    return "当前为公开源检索结果，仍需结合一手公告、交易所/价格授权源和人工复核"
 
 
 def _next_step(intent: QueryIntent, warnings: list[str]) -> str:
@@ -372,6 +457,28 @@ def _source_mode(hits: list[dict]) -> str:
     return ",".join(sorted(modes)) if modes else "none"
 
 
+def _is_fixture_source(meta: dict) -> bool:
+    mode = meta.get("source_mode", "")
+    url = meta.get("url", "")
+    return "fixture" in mode or "fixture.local" in url
+
+
+def _explicit_fixture_index(hits: list[dict]) -> bool:
+    modes = {hit["chunk"]["metadata"].get("source_mode", "") for hit in hits}
+    return bool(modes) and all("fixture" in mode for mode in modes)
+
+
+def _fixture_only_index(index_dir: str) -> bool:
+    try:
+        chunks = LocalVectorStore(index_dir).load_chunks()
+    except Exception:
+        return False
+    if not chunks:
+        return False
+    modes = {chunk.metadata.get("source_mode", "") for chunk in chunks[:50]}
+    return bool(modes) and all("fixture" in mode for mode in modes)
+
+
 def _best_excerpt(text: str, intent: QueryIntent) -> str:
     sentences = re.split(r"(?<=[.!?])\s+", text.strip())
     terms = [term.lower() for term in terms_for(intent)]
@@ -388,6 +495,13 @@ def _summarize_excerpt_zh(excerpt: str, intent: QueryIntent, meta: dict, citatio
     title = meta.get("title", "该来源")
     focus = _excerpt_focus(excerpt)
     if intent.intent == "price":
+        if meta.get("source_type") != "price":
+            variants = [
+                f"该{source_type}来源只提供{subject}的供应、项目或市场背景，不是直接行情证据。",
+                f"这条证据可解释{subject}的潜在供需因素，但不能替代 LME/SHFE/Mysteel 等授权价格数据。",
+                f"该命中段与{subject}有关，可作为价格问题的间接线索，仍需补充直接价格源。",
+            ]
+            return variants[(citation_id - 1) % len(variants)]
         variants = [
             f"该{source_type}来源显示{focus}，可用于判断{subject}价格变化是否有直接行情依据。",
             f"这条证据来自“{title}”，重点是{focus}，更适合支持价格方向或库存/需求解释。",
@@ -429,6 +543,8 @@ def _source_reliability(meta: dict) -> str:
     mode = meta.get("source_mode", "")
     if mode.startswith("real"):
         return "high"
+    if mode == "source_limited":
+        return "access_limited"
     if "fixture" in mode:
         return "demo_fixture"
     return "unknown"
@@ -462,6 +578,25 @@ def _subject(intent: QueryIntent) -> str:
 
 def _cite(ids: list[int]) -> str:
     return "".join(f"[{id_}]" for id_ in ids)
+
+
+def _warning_text(warnings: list[str]) -> str:
+    labels = {
+        "direct_price_evidence_not_found": "未检索到直接价格证据，不能仅凭新闻或政策判断价格变化",
+        "direct_policy_evidence_not_found": "未检索到直接政策证据，不能仅凭新闻或价格判断政策变化",
+        "no_relevant_evidence_above_threshold": "没有达到相关性门槛的原文证据",
+        "fixture_sources_excluded_from_business_answer": "已排除模拟 fixture 来源，避免把样例数据当作原文证据",
+        "fixture_mode_answer: using explicit demo fixture index, not original-source evidence": "当前使用显式样例索引，不能视为原站证据",
+    }
+    readable = []
+    for warning in warnings:
+        if warning.startswith("source_access_limited:"):
+            readable.append("部分原站访问受限，需要授权源或人工打开原站复核")
+        elif warning.startswith("unsupported_or_missing_source:"):
+            readable.append("当前索引缺少该地区或矿种的一手来源")
+        else:
+            readable.append(labels.get(warning, warning))
+    return "；".join(dict.fromkeys(readable))
 
 
 def _valid_model_answer(payload: dict | None, citations: list[dict]) -> bool:

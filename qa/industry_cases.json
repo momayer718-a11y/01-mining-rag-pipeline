@@ -1,28 +1,102 @@
 [
-  {"question":"近 30 天铜矿供应风险和 LME 铜价有什么关系?","expect_status":"ok"},
-  {"question":"中国稀土配额和监管变化对海外项目有什么影响?","expect_status":"ok"},
-  {"question":"镍项目投资现在主要看哪些价格和政策风险?","expect_status":"ok"},
-  {"question":"铁矿石价格上涨是否说明中国钢厂需求恢复?","expect_status":"ok"},
-  {"question":"澳洲锂矿出口政策和下游加工政策有什么变化?","expect_status":"ok"},
-  {"question":"锌价近期趋势如何?","expect_status":"ok"},
-  {"question":"SHFE 碳酸锂趋势如何?","expect_status":"ok"},
-  {"question":"稀土供应链有哪些监管关注?","expect_status":"ok"},
-  {"question":"Pilbara 出货受哪些约束?","expect_status":"ok"},
-  {"question":"矿业投资需要关注什么?","expect_status":"ok"},
-  {"question":"秘鲁铜矿社区冲突对供应链有什么影响?","expect_status":"abstain"},
-  {"question":"刚果钴矿政策风险如何?","expect_status":"abstain"},
-  {"question":"DRC cobalt royalty change impact?","expect_status":"abstain"},
-  {"question":"Peru copper community blockade update?","expect_status":"abstain"},
-  {"question":"钴价格走势和刚果政策有何关系?","expect_status":"abstain"},
-  {"question":"印尼镍矿出口限制最近有什么变化?","expect_status":"ok"},
-  {"question":"Chile copper maintenance risk?","expect_status":"ok"},
-  {"question":"Australia lithium processing grants?","expect_status":"ok"},
-  {"question":"China rare earth traceability policy?","expect_status":"ok"},
-  {"question":"Mysteel iron ore and blast furnace utilization?","expect_status":"ok"},
-  {"question":"LME zinc mine disruption impact?","expect_status":"ok"},
-  {"question":"Nickel battery destocking risk?","expect_status":"ok"},
-  {"question":"Lithium port scheduling risk at Pilbara?","expect_status":"ok"},
-  {"question":"Copper inventories and smelter charges?","expect_status":"ok"},
-  {"question":"Critical minerals permitting risk?","expect_status":"ok"}
+  {
+    "question": "近 30 天铜矿供应风险和 LME 铜价有什么关系?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "中国稀土配额和监管变化对海外项目有什么影响?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "镍项目投资现在主要看哪些价格和政策风险?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "铁矿石价格上涨是否说明中国钢厂需求恢复?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "澳洲锂矿出口政策和下游加工政策有什么变化?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "锌价近期趋势如何?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "SHFE 碳酸锂趋势如何?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "稀土供应链有哪些监管关注?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Pilbara 出货受哪些约束?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "矿业投资需要关注什么?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "秘鲁铜矿社区冲突对供应链有什么影响?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "刚果钴矿政策风险如何?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "DRC cobalt royalty change impact?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "Peru copper community blockade update?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "钴价格走势和刚果政策有何关系?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "印尼镍矿出口限制最近有什么变化?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Chile copper maintenance risk?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Australia lithium processing grants?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "China rare earth traceability policy?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Mysteel iron ore and blast furnace utilization?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "LME zinc mine disruption impact?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Nickel battery destocking risk?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Lithium port scheduling risk at Pilbara?",
+    "expect_status": "abstain"
+  },
+  {
+    "question": "Copper inventories and smelter charges?",
+    "expect_status": "ok"
+  },
+  {
+    "question": "Critical minerals permitting risk?",
+    "expect_status": "ok"
+  }
 ]
-

@@ -1,22 +1,35 @@
 # Mining RAG Pipeline Console
 
-Industry-facing RAG question-answering tool for mining news, critical-minerals policy and price evidence. The app ingests public/fixture sources, deduplicates and chunks documents, builds a local retrieval index, then answers Chinese industry questions with numbered evidence citations.
+Standalone MVP for interview question 1: a mining news + policy + price-source RAG assistant with a FastAPI API and Web console.
 
-This repository is project 01 from the mining interview MVP set. It is intentionally standalone: no shared backend, no shared database and no dependency on the other interview projects.
+The important behavior is evidence discipline. The default pipeline now ingests original public sources first and does not use synthetic fixture records as business evidence. If an original source is blocked, paywalled, rate-limited or too slow, the response returns `limited`/`abstain` with explicit warnings instead of inventing a price move or policy change.
+
+## Interview Requirement Mapping
+
+Question 1 asks for a 24-hour build of a three-source aggregation pipeline:
+
+- Mining news: MINING.com RSS and S&P Global Mining/Metals RSS.
+- Critical-minerals policy: Australia DISR Critical Minerals Strategy and China Rare Earth Group public pages.
+- Price sources: LME copper/zinc/nickel, SHFE lithium carbonate and Mysteel iron ore.
+- Delivery: `pipeline/`, `serve/`, `eval/`, `DATA_NOTES.md`, `/query` REST API, deduplication, vector-style retrieval, 20 Q&A eval and runnable documentation.
+
+This MVP implements the full chain while respecting source boundaries. MINING.com and China Rare Earth public pages are ingested as original-source documents where available. S&P, DISR, LME, SHFE and Mysteel can return access restrictions in this environment; those URLs are preserved as audit links and surfaced as warnings, not converted into fake numeric evidence.
 
 ## What It Does
 
-- Collects three evidence types: mining news, policy/regulatory notes and commodity price fixtures.
-- Falls back to `data/fixtures` when public sources are unavailable, with `source_mode` and `warnings` exposed in every response.
-- Parses common mining questions by commodity, region, intent and time window.
-- Retrieves and filters evidence by source priority, so price questions prefer price evidence and policy questions prefer policy evidence.
-- Uses a model, when configured, to synthesize the final Chinese answer from retrieved evidence and to write citation-specific Chinese summaries.
-- Falls back to deterministic Chinese output when no model key is provided, so the demo still runs offline.
-- Provides a FastAPI API, Web console, pytest suite, QA suite and Docker Compose entrypoint.
+- Crawls original RSS/HTML sources and writes `data/runtime/collection_snapshot.json`.
+- Deduplicates by `source + canonical_url + content_hash`.
+- Splits documents into chunks and indexes them in a local lexical vector-style store.
+- Parses mining questions by commodity, region, intent and time window.
+- Filters evidence so source links must match the requested commodity/region; irrelevant fixture or blocked-source notes are not used as answer facts.
+- Generates Chinese answers with numbered citations in the form `[1]`, `[2]`.
+- Uses a configured OpenAI-compatible model for answer synthesis when `MODEL_API_KEY` is present.
+- Falls back to deterministic Chinese output when no key is configured.
+- Provides a Web console with collapsible answer sources and raw backend JSON.
 
 ## Answer Format
 
-The business-facing answer is designed for auditability:
+Business output:
 
 ```text
 结论：... [1][2]
@@ -25,16 +38,16 @@ The business-facing answer is designed for auditability:
 下一步建议：...
 ```
 
-Each citation is rendered as:
+Citation cards:
 
 ```text
 1 - 原文标题
-命中段：English source sentence or paragraph
-概括：中文概括，由模型基于该条命中段和问题生成
-链接：https://...
+命中段：Original sentence or paragraph from the source
+概括：中文概括，基于该条命中段和问题生成
+链接：https://original-source-url
 ```
 
-Debug terms such as keyword hits and relevance scores are kept in the folded Raw JSON output only.
+Debug fields such as matched terms, relevance scores and raw hits stay in the folded backend JSON block.
 
 ## Quick Start
 
@@ -42,7 +55,7 @@ Debug terms such as keyword hits and relevance scores are kept in the folded Raw
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-make demo
+make ingest
 make serve
 ```
 
@@ -54,6 +67,8 @@ Docker:
 docker compose up --build
 ```
 
+The Docker command runs real-first ingestion before starting the Web console.
+
 ## Model Configuration
 
 The app reads model settings from environment variables only. Do not commit real keys.
@@ -64,17 +79,27 @@ export MODEL_BASE_URL=https://apihub.agnes-ai.com/v1
 export MODEL_NAME=agnes-2.0-flash
 ```
 
-When `MODEL_API_KEY` is present, `/query` uses the configured OpenAI-compatible chat endpoint to generate the Chinese answer and citation summaries. Without a key, the deterministic fallback remains runnable for interviews and CI.
+When a key is present, `/query` asks the configured chat model to synthesize the Chinese answer and citation summaries from retrieved evidence only. Without a key, the deterministic fallback remains runnable for tests and demos.
 
 ## API Example
 
 ```bash
 curl -s http://localhost:8001/query \
   -H 'content-type: application/json' \
-  -d '{"question":"近 7 天澳洲锂出口价格有何变化?","top_k":5,"days":7}' | jq
+  -d '{"question":"近 7 天澳洲锂出口政策有何变化?","top_k":5,"days":7}' | jq
 ```
 
 Stable response fields include `status`, `warnings`, `source_mode`, `elapsed_ms`, `data_quality`, `intent`, `answer`, `answer_points`, `citations` and `hits`.
+
+## Fixture Mode
+
+Fixtures are retained only for offline tests and deterministic demos:
+
+```bash
+make fixture-ingest
+```
+
+Do not present fixture results as original-source evidence. The normal `make ingest`, Docker startup and Web console use real-first ingestion.
 
 ## QA And Packaging
 
@@ -84,8 +109,15 @@ make qa
 make package
 ```
 
-`make qa` runs industry generalization cases for lithium, copper, nickel, zinc, iron ore, rare earth and cobalt across common regions. `make package` creates `/Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip`.
+`make qa` runs 25 industry generalization cases against the real-first index and verifies:
+
+- No `fixture.local` citation links.
+- Answers cite available source IDs correctly.
+- Price-source gaps return `limited` or `abstain` warnings.
+- Frontend text has the expected labels `命中段` / `概括` and no placeholder/debug leakage.
+
+`make package` creates `/Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip`.
 
 ## Boundaries
 
-This is a complete MVP, not a production market-data platform. It does not bypass login walls or paid data sources. Evidence gaps are returned as `limited` or `abstain` with explicit warnings instead of fabricated answers.
+This is a complete interview MVP, not a production market-data terminal. It does not bypass login walls, Cloudflare checks, paid feeds or rate limits. For formal trading/investment use, connect licensed LME/SHFE/Mysteel data and re-run the same indexing/query chain.

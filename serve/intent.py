@@ -53,7 +53,7 @@ INTENT_TERMS = {
     "data_gap": ["缺口", "证据不足", "data gap", "coverage"],
 }
 
-SUPPORTED_COMMODITIES = {"lithium", "copper", "nickel", "zinc", "iron ore", "rare earth"}
+SUPPORTED_COMMODITIES = {"lithium", "copper", "nickel", "zinc", "iron ore", "rare earth", "cobalt", "uranium", "graphite"}
 SUPPORTED_REGIONS = {"australia", "pilbara", "china", "indonesia", "chile"}
 
 
@@ -68,8 +68,8 @@ def parse_intent(text: str, default_days: int | None = None) -> QueryIntent:
         missing.append(f"{commodity} source not loaded")
     if region and region not in SUPPORTED_REGIONS and region not in {"drc", "peru"}:
         missing.append(f"{region} source not loaded")
-    if commodity == "cobalt" or region == "drc":
-        missing.append("DRC/cobalt source not loaded")
+    if region == "drc":
+        missing.append("DRC country/policy source not loaded")
     if region == "peru":
         missing.append("Peru community/conflict source not loaded")
     coverage = "supported" if not missing else "unsupported"

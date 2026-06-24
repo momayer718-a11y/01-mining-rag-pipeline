@@ -1,7 +1,67 @@
 {
   "tool": "01-mining-rag-pipeline",
   "status": "passed",
-  "elapsed_ms": 1189.62,
+  "elapsed_ms": 39741.98,
+  "ingest": {
+    "documents": 60,
+    "chunks": 355,
+    "by_source_type": {
+      "news": 43,
+      "policy": 12,
+      "price": 5
+    },
+    "source_modes": {
+      "real_rss": 42,
+      "source_limited": 8,
+      "real_html": 10
+    },
+    "source_urls": {
+      "mining.com": [
+        "https://www.mining.com/jindalee-lithium-inks-stewardship-mou-for-mcdermitt-project",
+        "https://www.mining.com/aclara-resources-gets-environmental-ok-for-chile-rare-earths-project",
+        "https://www.mining.com/deutsche-bank-cuts-q3-gold-price-target-by-22",
+        "https://www.mining.com/bhp-and-rio-tinto-test-electric-trucks-to-clean-up-iron-ore",
+        "https://www.mining.com/doe-launches-17-5b-loan-program-to-accelerate-nuclear-buildout",
+        "https://www.mining.com/web/rio-tinto-sees-lithium-as-fastest-growing-division-executive-says",
+        "https://www.mining.com/hyundai-backs-ioneers-nevada-lithium-boron-project",
+        "https://www.mining.com/terralithium-bhe-renewables-advance-toward-commercial-scale-lithium-extraction"
+      ],
+      "spglobal": [
+        "https://www.spglobal.com/energy/en/rss/metals"
+      ],
+      "disr": [
+        "https://www.industry.gov.au/publications/critical-minerals-strategy-2023-2030"
+      ],
+      "china-rare-earth": [
+        "https://www.regcc.cn/zgxtjt/jtnew/list.shtml",
+        "https://www.regcc.cn/zgxtjt/cydt/202312/1d5c884928fc46beb1f41ea0bcc1793c.shtml",
+        "https://www.regcc.cn/zgxtjt/cydt/202311/dcdeb0ee2c964459b220534b0c07f55e.shtml",
+        "https://www.regcc.cn/zgxtjt/cydt/202301/3c58d2198d7049b59694bf2662da5750.shtml",
+        "https://www.regcc.cn/zgxtjt/cydt/202301/5a64f2a849af42719a79ea956eea199f.shtml",
+        "https://www.regcc.cn/zgxtjt/cydt/202301/83c1d41407954c0c9a49c728e2b99361.shtml",
+        "https://www.regcc.cn/zgxtjt/gsgg/202602/6528ae798564409ca7af05180539b185.shtml",
+        "https://www.regcc.cn/zgxtjt/gsgg/202602/8fa8d66241db4bf1a79701ec427e536b.shtml"
+      ],
+      "lme": [
+        "https://www.lme.com/en/Metals/Non-ferrous/LME-Copper",
+        "https://www.lme.com/en/Metals/Non-ferrous/LME-Nickel",
+        "https://www.lme.com/en/Metals/Non-ferrous/LME-Zinc"
+      ],
+      "shfe": [
+        "https://www.shfe.com.cn/en/products/nonferrous/lithiumcarbonate"
+      ],
+      "mysteel": [
+        "https://www.mysteel.net"
+      ]
+    },
+    "warnings": [
+      "source_limited_present: some original sources were reachable only as access/status notes",
+      "authorized_price_feed_required: LME/SHFE/Mysteel numeric history was not loaded from a licensed feed",
+      "spglobal_access_limited: S&P Global RSS returned an access restriction in this environment"
+    ],
+    "source_mode": "real_first",
+    "index_dir": "data/runtime"
+  },
   "frontend": {
     "passed": true,
     "missing": [],
@@ -28,296 +88,379 @@
     "total": 25,
     "passed": 25,
     "success_rate": 1.0,
-    "avg_elapsed_ms": 44.52,
-    "p95_elapsed_ms": 64.67,
-    "abstain_rate": 0.2,
-    "unique_answer_signatures": 23,
+    "avg_elapsed_ms": 25.45,
+    "p95_elapsed_ms": 29.66,
+    "abstain_rate": 0.24,
+    "unique_answer_signatures": 24,
     "rows": [
       {
         "question": "近 30 天铜矿供应风险和 LME 铜价有什么关系?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 49.79,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 37.22,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "中国稀土配额和监管变化对海外项目有什么影响?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 64.67,
-        "warnings": [],
+        "elapsed_ms": 29.66,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr"
+        ],
         "evidence_count": 5,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "镍项目投资现在主要看哪些价格和政策风险?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 43.1,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 29.27,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "铁矿石价格上涨是否说明中国钢厂需求恢复?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 36.08,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 26.65,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 1,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "澳洲锂矿出口政策和下游加工政策有什么变化?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 85.67,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 29.69,
+        "warnings": [
+          "source_access_limited: disr, shfe",
+          "direct_policy_evidence_not_found"
+        ],
+        "evidence_count": 1,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "锌价近期趋势如何?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 40.93,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 28.07,
+        "warnings": [
+          "source_access_limited: lme",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "SHFE 碳酸锂趋势如何?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 36.01,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 28.11,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, shfe, spglobal",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "稀土供应链有哪些监管关注?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 46.79,
-        "warnings": [],
+        "elapsed_ms": 28.99,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr"
+        ],
         "evidence_count": 5,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Pilbara 出货受哪些约束?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 51.26,
+        "elapsed_ms": 25.86,
         "warnings": [],
-        "evidence_count": 5,
+        "evidence_count": 1,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "矿业投资需要关注什么?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 38.3,
-        "warnings": [],
+        "elapsed_ms": 17.91,
+        "warnings": [
+          "source_access_limited: spglobal"
+        ],
         "evidence_count": 5,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "秘鲁铜矿社区冲突对供应链有什么影响?",
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 48.28,
+        "elapsed_ms": 27.17,
         "warnings": [
-          "unsupported_or_missing_source: Peru community/conflict source not loaded"
+          "unsupported_or_missing_source: Peru community/conflict source not loaded",
+          "no_relevant_evidence_above_threshold",
+          "source_access_limited: lme"
         ],
         "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "刚果钴矿政策风险如何?",
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 50.35,
+        "elapsed_ms": 26.18,
         "warnings": [
-          "unsupported_or_missing_source: DRC/cobalt source not loaded"
+          "unsupported_or_missing_source: DRC country/policy source not loaded",
+          "no_relevant_evidence_above_threshold",
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "DRC cobalt royalty change impact?",
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 14.61,
+        "elapsed_ms": 14.31,
         "warnings": [
-          "unsupported_or_missing_source: DRC/cobalt source not loaded",
+          "unsupported_or_missing_source: DRC country/policy source not loaded",
           "no_relevant_evidence_above_threshold"
         ],
         "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Peru copper community blockade update?",
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 16.24,
+        "elapsed_ms": 14.71,
         "warnings": [
-          "unsupported_or_missing_source: Peru community/conflict source not loaded"
+          "unsupported_or_missing_source: Peru community/conflict source not loaded",
+          "no_relevant_evidence_above_threshold",
+          "source_access_limited: lme"
         ],
         "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "钴价格走势和刚果政策有何关系?",
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 52.55,
+        "elapsed_ms": 26.97,
         "warnings": [
-          "unsupported_or_missing_source: DRC/cobalt source not loaded"
+          "unsupported_or_missing_source: DRC country/policy source not loaded",
+          "no_relevant_evidence_above_threshold",
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "印尼镍矿出口限制最近有什么变化?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 62.84,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 27.22,
+        "warnings": [
+          "source_access_limited: disr, lme",
+          "direct_policy_evidence_not_found"
+        ],
+        "evidence_count": 2,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Chile copper maintenance risk?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 47.42,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 26.39,
+        "warnings": [
+          "source_access_limited: lme"
+        ],
+        "evidence_count": 1,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Australia lithium processing grants?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 32.53,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 15.42,
+        "warnings": [
+          "source_access_limited: disr, shfe"
+        ],
+        "evidence_count": 1,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "China rare earth traceability policy?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 70.78,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 27.39,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, spglobal",
+          "direct_policy_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Mysteel iron ore and blast furnace utilization?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 32.91,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 28.84,
+        "warnings": [
+          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "LME zinc mine disruption impact?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 40.45,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 28.14,
+        "warnings": [
+          "source_access_limited: lme",
+          "direct_price_evidence_not_found"
+        ],
+        "evidence_count": 3,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Nickel battery destocking risk?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 50.2,
-        "warnings": [],
+        "elapsed_ms": 25.74,
+        "warnings": [
+          "source_access_limited: lme"
+        ],
         "evidence_count": 5,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Lithium port scheduling risk at Pilbara?",
-        "expected": "ok",
-        "actual": "ok",
+        "expected": "abstain",
+        "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 44.28,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 26.64,
+        "warnings": [
+          "no_relevant_evidence_above_threshold",
+          "source_access_limited: shfe"
+        ],
+        "evidence_count": 0,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Copper inventories and smelter charges?",
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 17.71,
-        "warnings": [],
+        "elapsed_ms": 15.13,
+        "warnings": [
+          "source_access_limited: lme"
+        ],
         "evidence_count": 5,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       },
       {
         "question": "Critical minerals permitting risk?",
         "expected": "ok",
-        "actual": "ok",
+        "actual": "limited",
         "passed": true,
-        "elapsed_ms": 39.22,
-        "warnings": [],
-        "evidence_count": 5,
+        "elapsed_ms": 24.63,
+        "warnings": [
+          "source_access_limited: disr",
+          "direct_policy_evidence_not_found"
+        ],
+        "evidence_count": 2,
         "citation_ok": true,
-        "debug_leak": false
+        "debug_leak": false,
+        "fixture_links": false
       }
     ]
   }

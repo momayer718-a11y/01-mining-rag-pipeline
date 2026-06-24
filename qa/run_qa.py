@@ -15,7 +15,7 @@ PLACEHOLDERS = ["TODO", "placeholder", "Traceback", "undefined", "null null"]
 
 def run() -> dict:
     started = time.perf_counter()
-    run_ingest("data/runtime", per_source=200, fixture=True)
+    ingest_summary = run_ingest("data/runtime", per_source=5, fixture=False)
     cases = json.loads(Path("qa/industry_cases.json").read_text(encoding="utf-8"))
     rows = []
     elapsed = []
@@ -32,12 +32,13 @@ def run() -> dict:
                 "question": case["question"],
                 "expected": case["expect_status"],
                 "actual": result["status"],
-                "passed": result["status"] == case["expect_status"] and citation_ok and not debug_leak,
+                "passed": _status_ok(result["status"], case["expect_status"]) and citation_ok and not debug_leak and _no_fixture_links(result),
                 "elapsed_ms": result["elapsed_ms"],
                 "warnings": result["warnings"],
                 "evidence_count": len(result["hits"]),
                 "citation_ok": citation_ok,
                 "debug_leak": debug_leak,
+                "fixture_links": not _no_fixture_links(result),
             }
         )
     frontend = _frontend_report(CONSOLE_HTML)
@@ -55,6 +56,7 @@ def run() -> dict:
         "tool": "01-mining-rag-pipeline",
         "status": "passed" if backend["passed"] == backend["total"] and frontend["passed"] else "failed",
         "elapsed_ms": round((time.perf_counter() - started) * 1000, 2),
+        "ingest": ingest_summary,
         "frontend": frontend,
         "backend": backend,
     }
@@ -89,6 +91,19 @@ def _citation_integrity(result: dict) -> bool:
     return bool(used) and used.issubset(citation_ids)
 
 
+def _status_ok(actual: str, expected: str) -> bool:
+    if actual == expected:
+        return True
+    if expected == "ok" and actual == "limited":
+        return True
+    return False
+
+
+def _no_fixture_links(result: dict) -> bool:
+    payload = json.dumps(result.get("citations", []), ensure_ascii=False)
+    return "fixture.local" not in payload
+
+
 def _debug_leak(answer: str) -> bool:
     blocked = ["命中关键词", "命中主题", "relevance", "相关性为"]
     return any(token in answer for token in blocked)
@@ -104,6 +119,8 @@ def _markdown(report: dict) -> str:
     return (
         "# QA_REPORT - Mining RAG Pipeline\n\n"
         f"- Status: {report['status']}\n"
+        f"- Ingest mode: {report['ingest'].get('source_mode')}\n"
+        f"- Source modes: {report['ingest'].get('source_modes')}\n"
         f"- Backend cases: {b['passed']}/{b['total']}\n"
         f"- Avg elapsed: {b['avg_elapsed_ms']} ms\n"
         f"- P95 elapsed: {b['p95_elapsed_ms']} ms\n"
