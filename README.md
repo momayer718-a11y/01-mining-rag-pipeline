@@ -1,52 +1,27 @@
 # Mining RAG Pipeline Console
 
-Mining RAG Pipeline Console is a runnable mining-industry research assistant for interview question 1. It aggregates mining news, critical-minerals policy sources and price evidence, then answers Chinese or mixed Chinese/English questions with citations, retrieval audit traces and explicit evidence-quality boundaries.
+## 项目简介
 
-The implementation is optimized for a practical MVP demo rather than a toy RAG script:
+Mining RAG Pipeline Console 是一个面向矿业研究场景的本地 RAG 问答系统。它将矿业新闻、政策资料、价格线索和项目事件组织成可检索知识库，并通过 FastAPI 与 Web 控制台提供中文或中英混合问答、引用展示、检索审计和模型增强回答。
 
-- Fast first answer: `/query` returns a citation-based answer immediately, while optional DeepSeek V4 Pro enhancement runs as a second stage.
-- Broad-question retrieval: Australian export-policy, rare-earth, Pilbara shipment and price questions trigger query expansion, source-type preference and reranking.
-- Evidence governance: blocked, paywalled, CAPTCHA, Cloudflare or licensed feeds become `source_limited` audit records instead of fabricated facts.
-- Price-source boundary: public-visible/proxy/third-party price rows can support MVP analysis, but are labelled separately from official LME/SHFE/Mysteel authorized data.
-- QA visibility: `retrieval_trace`, coverage audit, selected/dropped evidence reasons and 50-case eval reports are included for review.
+Mining RAG Pipeline Console is a local RAG assistant for mining research workflows. It organizes mining news, policy material, price context and project events into a searchable knowledge base, then exposes Chinese or mixed Chinese/English Q&A through a FastAPI API and Web console with citations, retrieval audit traces and optional model-enhanced answers.
 
-Latest checked results:
+## 核心能力 / Key Features
+
+- 快速首答 / Fast first answer: `/query` 先返回基于引用的快速答案，DeepSeek V4 Pro 增强回答作为第二阶段执行。
+- 宽泛问题检索 / Broad-query retrieval: 面向矿业政策、价格趋势、项目新闻和供应链风险自动展开查询并重排证据。
+- 可审计引用 / Auditable citations: 每个答案保留 citation、命中段、中文概括、选中原因和 `retrieval_trace`。
+- 双语问题支持 / Bilingual query support: 支持中文、英文和中英混合矿业问题。
+- 本地可运行 / Local runnable stack: 提供采集、索引、查询、Web 控制台、QA、评测和 Docker 运行路径。
+
+## 最新验证 / Latest Validation
 
 | Check | Result |
 | --- | --- |
 | Unit tests | 17 passed |
 | Industry QA | 25/25 backend cases passed |
-| Runtime coverage | news 316, policy 442, price 253, total usable 1011 |
 | 50-case generalization eval | 50/50 passed |
 | First-answer latency | avg 1119.56 ms, p95 1971.3 ms |
-
-The important product behavior is evidence discipline. The pipeline ingests original public sources first, separates usable evidence from access-status notes, and does not use synthetic fixture records as business evidence. If an original source is blocked, paywalled, rate-limited or too slow, the response returns `limited`/`abstain` with explicit warnings instead of inventing a price move or policy change.
-
-## Interview Requirement Mapping
-
-Question 1 asks for a 24-hour build of a three-source aggregation pipeline:
-
-- Mining news: MINING.com RSS and S&P Global Mining/Metals RSS.
-- Critical-minerals policy: Australia DISR Critical Minerals Strategy and China Rare Earth Group public pages.
-- Price sources: LME copper/zinc/nickel, SHFE lithium carbonate and Mysteel iron ore.
-- Delivery: `pipeline/`, `serve/`, `eval/`, `DATA_NOTES.md`, `/query` REST API, deduplication, hybrid vector-style retrieval, QA and 50-case generalization eval, plus runnable documentation.
-
-This MVP implements the full chain while respecting source boundaries. MINING.com, Federal Register, China Rare Earth public pages, public-visible/proxy price rows and clearly labelled third-party public supplements are ingested where available. S&P, DISR, LME, SHFE and Mysteel can return access restrictions in some environments; those URLs are preserved as audit links and surfaced as warnings, not converted into fake official numeric evidence.
-
-## Source Coverage
-
-The bundled runtime cache can be rebuilt with public-visible/proxy price rows and third-party public supplements so news, policy and price each target 200 usable evidence records. LME/SHFE/Mysteel official pages remain audit links when programmatic access is blocked; public-visible/proxy/third-party rows are labelled separately from authorized exchange/vendor feeds.
-
-`/stats` and the Web console expose `coverage_audit`:
-
-| Type | Target | Current usable | Status |
-| --- | ---: | ---: | --- |
-| news | 200 | 316 in latest checked `data/runtime` | pass |
-| policy | 200 | 442 in latest checked `data/runtime` | pass |
-| price | 200 | 253 in latest checked `data/runtime` | pass |
-| total | 600 | 1011 usable in latest checked `data/runtime` | pass |
-
-Source-limited records and source-discovery rows are audit records only and never count toward the 600-record target.
 
 ## What It Does
 
@@ -57,7 +32,7 @@ Source-limited records and source-discovery rows are audit records only and neve
 - Splits documents into chunks and indexes them in a local hybrid lexical/BM25-style store with metadata, phrase, source-type and recency boosts.
 - Parses mining questions by commodity, region, intent and time window.
 - Expands broad mining questions into multiple source/commodity/policy searches before reranking.
-- Filters evidence so source links must match the requested commodity/region; irrelevant fixture or blocked-source notes are not used as answer facts.
+- Filters evidence so source links must match the requested commodity/region; irrelevant fixture or debug notes are not used as answer facts.
 - Generates Chinese answers with numbered citations in the form `[1]`, `[2]`.
 - Returns a deterministic citation-based fast answer first; the Web console then optionally asks the configured OpenAI-compatible model for an enhanced answer.
 - Keeps the fast answer when the model times out or returns invalid JSON.
@@ -205,4 +180,4 @@ The latest 50-case generalization eval covers broad industry summaries, Australi
 
 ## Boundaries
 
-This is a complete interview MVP, not a production market-data terminal. It does not bypass login walls, CAPTCHA, Cloudflare challenges, paid feeds or rate limits. It uses public RSS/API/pages, caching, retry, rate limiting and optional proxy configuration for normal network egress. For formal trading/investment use, connect licensed LME/SHFE/Mysteel data and re-run the same indexing/query chain.
+This is a local mining research assistant, not a financial-advice product or production trading terminal. For formal trading or investment workflows, connect licensed market-data services and run the same indexing/query chain under production controls.
