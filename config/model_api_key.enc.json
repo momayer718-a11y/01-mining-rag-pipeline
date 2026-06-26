@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "algorithm": "AES-256-GCM",
+  "kdf": "PBKDF2-HMAC-SHA256",
+  "iterations": 200000,
+  "salt": "Gke7R2SwdYywjJT2a+1YxQ==",
+  "nonce": "wi5lUQOFwwOF3Nx6",
+  "ciphertext": "d3KOOiReFTrkDqYMp3uRCzYHePlAzhBYY3KwVbaxQL8Z67nTvFjyhXsKUtGwHgXsJ1O1",
+  "base_url": "https://api.deepseek.com",
+  "model": "deepseek-v4-pro"
+}

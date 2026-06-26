@@ -16,6 +16,7 @@ class QueryRequest(BaseModel):
     question: str
     top_k: int = Field(default=5, ge=1, le=20)
     days: Optional[int] = Field(default=None, ge=1, le=365)
+    enhance: bool = False
 
 
 app = FastAPI(title="Mining RAG Pipeline MVP")
@@ -36,28 +37,73 @@ def stats() -> dict:
     store = LocalVectorStore("data/runtime")
     chunks = store.load_chunks()
     if not chunks:
-        run_ingest(out="data/runtime", per_source=20, fixture=False)
+        ingest_summary = run_ingest(out="data/runtime", per_source=20, fixture=False)
         chunks = store.load_chunks()
+    else:
+        ingest_summary = None
     by_type: dict[str, int] = {}
     source_modes: dict[str, int] = {}
+    usable_by_type: dict[str, int] = {}
+    limited_by_type: dict[str, int] = {}
+    doc_meta: dict[str, dict] = {}
     documents = set()
     for chunk in chunks:
         documents.add(chunk.document_id)
+        doc_meta.setdefault(chunk.document_id, chunk.metadata)
         source_type = chunk.metadata.get("source_type", "unknown")
         mode = chunk.metadata.get("source_mode", "unknown")
         by_type[source_type] = by_type.get(source_type, 0) + 1
         source_modes[mode] = source_modes.get(mode, 0) + 1
+    for meta in doc_meta.values():
+        source_type = meta.get("source_type", "unknown")
+        mode = meta.get("source_mode", "unknown")
+        evidence_kind = meta.get("evidence_kind", "")
+        if mode != "source_limited" and evidence_kind not in {"source_status", "source_discovery"}:
+            usable_by_type[source_type] = usable_by_type.get(source_type, 0) + 1
+        else:
+            limited_by_type[source_type] = limited_by_type.get(source_type, 0) + 1
+    coverage_audit = ingest_summary.get("coverage_audit") if ingest_summary else _coverage_from_chunks(usable_by_type, limited_by_type)
     return {
         "status": "ok",
         "documents": len(documents),
         "chunks": len(chunks),
         "by_source_type": by_type,
+        "usable_evidence_by_source_type": usable_by_type,
+        "source_limited_by_source_type": limited_by_type,
+        "coverage_audit": coverage_audit,
         "source_modes": source_modes,
         "warnings": [],
         "source_mode": ",".join(sorted(source_modes)) if source_modes else "none",
-        "data_quality": {"grade": "usable", "documents": len(documents), "chunks": len(chunks)},
+        "data_quality": {"grade": "usable" if _all_coverage_targets_met(coverage_audit) else "limited", "documents": len(documents), "chunks": len(chunks)},
         "elapsed_ms": 0,
     }
+
+
+def _all_coverage_targets_met(coverage_audit: dict) -> bool:
+    return all(coverage_audit.get(source_type, {}).get("meets_target") for source_type in ("news", "policy", "price", "total"))
+
+
+def _coverage_from_chunks(usable_by_type: dict[str, int], limited_by_type: dict[str, int]) -> dict:
+    target = 200
+    rows = {}
+    for source_type in ("news", "policy", "price"):
+        usable = usable_by_type.get(source_type, 0)
+        rows[source_type] = {
+            "target": target,
+            "usable_evidence_count": usable,
+            "source_limited_count": limited_by_type.get(source_type, 0),
+            "gap": max(0, target - usable),
+            "meets_target": usable >= target,
+        }
+    total = sum(usable_by_type.values())
+    rows["total"] = {
+        "target": target * 3,
+        "usable_evidence_count": total,
+        "source_limited_count": sum(limited_by_type.values()),
+        "gap": max(0, target * 3 - total),
+        "meets_target": total >= target * 3,
+    }
+    return rows
 
 
 @app.post("/ingest")
@@ -67,17 +113,17 @@ def ingest_endpoint() -> dict:
 
 @app.get("/eval")
 def eval_endpoint() -> dict:
-    return run_eval(index_dir="data/runtime")
+    return run_eval(index_dir="data/runtime", gt_path="eval/generalization_50.json")
 
 
 @app.post("/query")
 @app.get("/query")
-def query_endpoint(payload: QueryRequest | None = None, question: str | None = None, top_k: int = 5, days: int | None = None) -> dict:
+def query_endpoint(payload: QueryRequest | None = None, question: str | None = None, top_k: int = 5, days: int | None = None, enhance: bool = False) -> dict:
     if payload is not None:
-        return query(payload.question, payload.top_k, payload.days)
+        return query(payload.question, payload.top_k, payload.days, enhance=payload.enhance)
     if not question:
         return {"status": "error", "error": "question is required", "warnings": ["missing_question"], "source_mode": "none", "data_quality": {"grade": "invalid"}, "elapsed_ms": 0}
-    return query(question, top_k, days)
+    return query(question, top_k, days, enhance=enhance)
 
 
 CONSOLE_HTML = """
@@ -88,11 +134,12 @@ CONSOLE_HTML = """
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mining RAG Console</title>
   <style>
-    :root { color-scheme: light; --bg:#f6f7f9; --panel:#fff; --ink:#1f2937; --muted:#64748b; --line:#d9dee7; --accent:#0f766e; --warn:#b45309; }
+    :root { color-scheme: light; --bg:#f6f7f9; --panel:#fff; --ink:#1f2937; --muted:#64748b; --line:#d9dee7; --accent:#0f766e; --warn:#b45309; --ok:#047857; --bad:#b91c1c; --soft:#eef2f7; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background:var(--bg); color:var(--ink); }
     header { padding:24px 32px 16px; border-bottom:1px solid var(--line); background:#fff; }
     h1 { margin:0 0 6px; font-size:24px; letter-spacing:0; }
+    h2 { margin:0; font-size:18px; letter-spacing:0; }
     .sub { color:var(--muted); font-size:14px; }
     main { padding:24px 32px 36px; display:grid; gap:18px; max-width:1180px; margin:0 auto; }
     .grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px; }
@@ -117,36 +164,36 @@ CONSOLE_HTML = """
     .hit .excerpt { color:#1f2937; line-height:1.55; margin:8px 0; }
     .hit .summary { color:#334155; margin:8px 0; }
     .muted { color:var(--muted); font-size:13px; }
+    .badge { display:inline-flex; align-items:center; justify-content:center; min-width:54px; padding:3px 7px; border-radius:999px; font-size:12px; font-weight:750; }
+    .pass { color:var(--ok); background:#dcfce7; }
+    .fail { color:var(--bad); background:#fee2e2; }
+    .bar { height:8px; width:100%; max-width:180px; background:var(--soft); border-radius:999px; overflow:hidden; }
+    .fill { height:100%; background:var(--accent); border-radius:999px; }
     @media (max-width: 760px) { header, main { padding-left:16px; padding-right:16px; } .grid { grid-template-columns:1fr 1fr; } }
   </style>
 </head>
 <body>
   <header>
     <h1>三源聚合 RAG 控制台</h1>
-    <div class="sub">采集、索引、自然语言查询、20 条 Q&A 自动评测</div>
+    <div class="sub">采集、索引、自然语言查询、50 条泛化自动评测</div>
   </header>
   <main>
     <section class="grid">
       <div class="panel"><div class="muted">文档数</div><div id="docs" class="metric">-</div></div>
       <div class="panel"><div class="muted">切片数</div><div id="chunks" class="metric">-</div></div>
-      <div class="panel"><div class="muted">Recall@5</div><div id="recall" class="metric">-</div></div>
-      <div class="panel"><div class="muted">引用完整性</div><div id="faith" class="metric">-</div></div>
+      <div class="panel"><div class="muted">数据状态</div><div id="quality" class="metric">-</div></div>
+      <div class="panel"><div class="muted">模型</div><div id="model" class="metric">-</div></div>
     </section>
     <section class="panel">
       <div class="row" style="justify-content:space-between">
         <div>
           <label for="question">中文问题</label>
-          <div class="muted">示例：近 7 天澳洲锂出口政策有何变化?</div>
-        </div>
-        <div class="row">
-          <button id="ingestBtn" class="secondary" onclick="ingest()">重新采集原站数据</button>
-          <button id="evalBtn" class="secondary" onclick="runEval()">运行评测</button>
+          <div class="muted">示例：最近澳洲矿石出口有哪些政策改动?</div>
         </div>
       </div>
-      <textarea id="question">近 7 天澳洲锂出口政策有何变化?</textarea>
+      <textarea id="question">最近澳洲矿石出口有哪些政策改动?</textarea>
       <div class="row" style="margin-top:10px">
         <label style="margin:0">Top K <input id="topk" type="number" min="1" max="20" value="5"></label>
-        <label style="margin:0">Days <input id="days" type="number" min="1" max="365" value="7"></label>
         <button id="queryBtn" onclick="ask()">查询</button>
       </div>
     </section>
@@ -177,7 +224,7 @@ CONSOLE_HTML = """
       const data = await json('/stats');
       docs.textContent = data.documents;
       chunks.textContent = data.chunks;
-      raw.textContent = JSON.stringify(data, null, 2);
+      quality.textContent = data.data_quality && data.data_quality.grade ? data.data_quality.grade : '-';
     }
     function setBusy(button, busy, text) {
       button.disabled = busy;
@@ -188,48 +235,45 @@ CONSOLE_HTML = """
         button.textContent = button.dataset.label;
       }
     }
-    async function ingest() {
-      setBusy(ingestBtn, true, '采集中...');
-      try {
-        raw.textContent = '正在采集 MINING.com、中国稀土集团、DISR 等原站数据并重建索引...';
-        const data = await json('/ingest', {method:'POST'});
-        raw.textContent = JSON.stringify(data, null, 2);
-        await refreshStats();
-      } finally {
-        setBusy(ingestBtn, false);
-      }
-    }
-    async function runEval() {
-      setBusy(evalBtn, true, '评测中...');
-      try {
-        raw.textContent = '正在运行 20 条 ground truth 评测...';
-        const data = await json('/eval');
-        recall.textContent = data['recall@5'];
-        faith.textContent = data.answer_faithfulness;
-        raw.textContent = JSON.stringify(data, null, 2);
-      } finally {
-        setBusy(evalBtn, false);
-      }
-    }
     async function ask() {
       setBusy(queryBtn, true, '查询中...');
-      const payload = {question: question.value, top_k: Number(topk.value), days: Number(days.value)};
+      const payload = {question: question.value, top_k: Number(topk.value)};
       try {
         const data = await json('/query', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload)});
         const statusText = data.status === 'ok' ? '可回答' : data.status === 'limited' ? '证据有限' : '证据不足';
-        answer.textContent = `状态：${statusText}\n\n${data.answer}`;
+        model.textContent = data.model_name || '-';
+        answer.textContent = `状态：${statusText}\n阶段：${data.answer_stage || 'fast_answer'}\n\n${data.answer}`;
         hits.innerHTML = data.citations && data.citations.length ? data.citations.map((c) => {
-          return `<div class="hit"><b>${c.id} - ${escapeHtml(c.title)}</b><div class="excerpt">命中段：${escapeHtml(c.matched_excerpt_en)}</div><div class="summary">概括：${escapeHtml(c.summary_zh)}</div><div class="muted">链接：${escapeHtml(c.url)}</div></div>`;
+          return `<div class="hit"><b>${c.id} - ${escapeHtml(c.title)}</b><div class="muted">证据类型：${escapeHtml(c.directness || 'unknown')}；选中原因：${escapeHtml(c.selection_reason || '')}</div><div class="excerpt">命中段：${escapeHtml(c.matched_excerpt_en)}</div><div class="summary">概括：${escapeHtml(c.summary_zh)}</div><div class="muted">链接：${escapeHtml(c.url)}</div></div>`;
         }).join('') : '<div class="muted">没有达到相关性门槛的来源。请补充对应数据源或扩大范围。</div>';
         raw.textContent = JSON.stringify(data, null, 2);
+        if (data.citations && data.citations.length) {
+          enhanceAnswer(payload, statusText, data);
+        }
       } finally {
         setBusy(queryBtn, false);
+      }
+    }
+    async function enhanceAnswer(payload, statusText, fastData) {
+      const enhancedPayload = {...payload, enhance:true};
+      try {
+        const data = await json('/query', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(enhancedPayload)});
+        model.textContent = data.model_name || '-';
+        if (data.model_status === 'completed') {
+          answer.textContent = `状态：${statusText}\n阶段：model_enhanced\n\n${data.answer}`;
+          raw.textContent = JSON.stringify(data, null, 2);
+        } else {
+          answer.textContent = `状态：${statusText}\n阶段：${fastData.answer_stage || 'fast_answer'}\n模型增强：${data.model_status || 'failed'} ${data.retrieval_trace && data.retrieval_trace.model_error_type ? '(' + data.retrieval_trace.model_error_type + ')' : ''}\n\n${fastData.answer}`;
+          raw.textContent = JSON.stringify(data, null, 2);
+        }
+      } catch (err) {
+        answer.textContent = `状态：${statusText}\n阶段：${fastData.answer_stage || 'fast_answer'}\n模型增强：failed\n\n${fastData.answer}`;
       }
     }
     function escapeHtml(value) {
       return String(value || '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     }
-    refreshStats().then(runEval).then(ask);
+    refreshStats().then(ask);
   </script>
 </body>
 </html>

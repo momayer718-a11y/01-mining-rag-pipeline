@@ -12,6 +12,7 @@ class QueryIntent:
     days: int | None
     coverage_status: str
     missing_dimensions: list[str]
+    domain: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -62,7 +63,8 @@ def parse_intent(text: str, default_days: int | None = None) -> QueryIntent:
     commodity = _first_match(lowered, text, COMMODITY_TERMS)
     region = _first_match(lowered, text, REGION_TERMS)
     intent = _detect_intent(lowered, text)
-    days = default_days or _extract_days(text)
+    days = _resolve_days(text, default_days)
+    domain = "broad_mining" if _is_broad_mining_query(lowered, text, commodity) else None
     missing = []
     if commodity and commodity not in SUPPORTED_COMMODITIES and commodity != "cobalt":
         missing.append(f"{commodity} source not loaded")
@@ -80,6 +82,7 @@ def parse_intent(text: str, default_days: int | None = None) -> QueryIntent:
         days=days,
         coverage_status=coverage,
         missing_dimensions=sorted(set(missing)),
+        domain=domain,
     )
 
 
@@ -107,9 +110,16 @@ def preferred_source_types(intent: QueryIntent) -> list[str]:
 
 def _first_match(lowered: str, original: str, mapping: dict[str, list[str]]) -> str | None:
     for value, terms in mapping.items():
-        if any(term in lowered or term in original for term in terms):
-            return value
+        for term in terms:
+            if _term_matches(lowered, original, term):
+                return value
     return None
+
+
+def _term_matches(lowered: str, original: str, term: str) -> bool:
+    if term.isascii() and len(term) <= 3:
+        return re.search(rf"(?<![a-z0-9]){re.escape(term.lower())}(?![a-z0-9])", lowered) is not None
+    return term.lower() in lowered or term in original
 
 
 def _detect_intent(lowered: str, original: str) -> str:
@@ -129,3 +139,21 @@ def _extract_days(text: str) -> int | None:
     if "最近" in text or "recent" in lowered:
         return 30
     return None
+
+
+def _resolve_days(text: str, default_days: int | None) -> int | None:
+    explicit = _extract_days(text)
+    if explicit is not None:
+        return explicit
+    if default_days is not None and ("最近" not in text and "recent" not in text.lower()):
+        return default_days
+    if "最近" in text or "recent" in text.lower():
+        return 30
+    return default_days
+
+
+def _is_broad_mining_query(lowered: str, original: str, commodity: str | None) -> bool:
+    if commodity:
+        return False
+    broad_terms = ["矿石", "矿业", "矿产", "关键矿产", "critical minerals", "mining", "minerals", "ore"]
+    return any(term in lowered or term in original for term in broad_terms)

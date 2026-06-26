@@ -1,30 +1,96 @@
 {
   "tool": "01-mining-rag-pipeline",
   "status": "passed",
-  "elapsed_ms": 39741.98,
+  "elapsed_ms": 73238.31,
   "ingest": {
-    "documents": 60,
-    "chunks": 355,
+    "documents": 82,
+    "chunks": 389,
     "by_source_type": {
-      "news": 43,
+      "news": 54,
+      "policy": 15,
+      "price": 13
+    },
+    "usable_evidence_by_source_type": {
+      "news": 53,
       "policy": 12,
+      "price": 8
+    },
+    "source_limited_by_source_type": {
+      "news": 1,
+      "policy": 3,
       "price": 5
     },
+    "target_per_source_type": 200,
+    "target_total": 600,
+    "coverage_audit": {
+      "news": {
+        "target": 200,
+        "usable_evidence_count": 53,
+        "source_limited_count": 1,
+        "gap": 147,
+        "meets_target": false
+      },
+      "policy": {
+        "target": 200,
+        "usable_evidence_count": 12,
+        "source_limited_count": 3,
+        "gap": 188,
+        "meets_target": false
+      },
+      "price": {
+        "target": 200,
+        "usable_evidence_count": 8,
+        "source_limited_count": 5,
+        "gap": 192,
+        "meets_target": false
+      },
+      "total": {
+        "target": 600,
+        "usable_evidence_count": 73,
+        "source_limited_count": 9,
+        "gap": 527,
+        "meets_target": false
+      }
+    },
     "source_modes": {
-      "real_rss": 42,
-      "source_limited": 8,
-      "real_html": 10
+      "real_rss": 51,
+      "source_limited": 9,
+      "real_html": 6,
+      "official_api": 5,
+      "public_visible_price": 5,
+      "third_party_public": 6
     },
     "source_urls": {
       "mining.com": [
-        "https://www.mining.com/jindalee-lithium-inks-stewardship-mou-for-mcdermitt-project",
-        "https://www.mining.com/aclara-resources-gets-environmental-ok-for-chile-rare-earths-project",
-        "https://www.mining.com/deutsche-bank-cuts-q3-gold-price-target-by-22",
-        "https://www.mining.com/bhp-and-rio-tinto-test-electric-trucks-to-clean-up-iron-ore",
-        "https://www.mining.com/doe-launches-17-5b-loan-program-to-accelerate-nuclear-buildout",
-        "https://www.mining.com/web/rio-tinto-sees-lithium-as-fastest-growing-division-executive-says",
-        "https://www.mining.com/hyundai-backs-ioneers-nevada-lithium-boron-project",
-        "https://www.mining.com/terralithium-bhe-renewables-advance-toward-commercial-scale-lithium-extraction"
+        "https://www.mining.com/american-ocean-minerals-finishes-first-offshore-exploration-mission-in-cook-islands",
+        "https://www.mining.com/realloys-raises-100m-via-institutional-placement",
+        "https://www.mining.com/rct-tech-helps-historic-mine-navigate-the-transition-to-surface-mining",
+        "https://www.mining.com/goldsky-closes-agnico-deal-to-become-sole-owner-of-swedish-project",
+        "https://www.mining.com/generation-mining-nears-c1-billion-copper-project-funding",
+        "https://www.mining.com/web/us-army-bases-to-host-critical-minerals-plants-in-onshoring-push",
+        "https://www.mining.com/web/lithium-producers-bet-on-battery-storage-as-demand-shifts-beyond-evs",
+        "https://www.mining.com/web/zimbabwe-exploring-minerals-backed-deals-with-china-to-fund-infrastructure"
+      ],
+      "northern-miner": [
+        "https://www.northernminer.com/news/generation-mining-nears-1b-copper-project-funding/1003892484",
+        "https://www.northernminer.com/news/hemlo-boosts-mi-resources-34-at-gold-mine/1003892475",
+        "https://www.northernminer.com/news/infographic-canadas-blue-collar-wage-leaders/1003892463",
+        "https://www.northernminer.com/news/heliostar-drilling-suggests-big-prize-at-426m-value-ana-paula-gold-project/1003892481",
+        "https://www.northernminer.com/news/wesdome-increases-reserve-base-to-support-production-through-2033/1003892495"
+      ],
+      "mining-technology": [
+        "https://www.mining-technology.com/news/legacy-minerals-geophysical-surveys-mt-carrington",
+        "https://www.mining-technology.com/news/second-gold-bar-pacgolds-white-dam-project",
+        "https://www.mining-technology.com/news/district-metals-drilling-osterkalen-sweden",
+        "https://www.mining-technology.com/news/lexington-gold-to-sell-gar-unit-goldoz",
+        "https://www.mining-technology.com/news/brimstone-century-mou-us-aluminium-supply"
+      ],
+      "international-mining": [
+        "https://im-mining.com/2026/06/25/chilean-copper-miner-orders-23-new-konecranes-lift-trucks",
+        "https://im-mining.com/2026/06/25/bme-says-it-is-driving-the-development-of-connected-ai-powered-mining-operations",
+        "https://im-mining.com/2026/06/25/tonly-highlights-latest-green-mining-trucks-at-2026-customer-festival",
+        "https://im-mining.com/2026/06/25/cemex-and-sensmore-showcase-digital-and-automated-quarry-at-rudersdorf",
+        "https://im-mining.com/2026/06/25/multotec-delivers-tailored-spirals-to-thaba-jv-chromite-and-pgm-project"
       ],
       "spglobal": [
         "https://www.spglobal.com/energy/en/rss/metals"
@@ -32,15 +98,45 @@
       "disr": [
         "https://www.industry.gov.au/publications/critical-minerals-strategy-2023-2030"
       ],
+      "iea": [
+        "https://www.iea.org/topics/critical-minerals",
+        "https://www.iea.org/reports/critical-minerals-market-review-2023"
+      ],
+      "geoscience-australia": [
+        "https://www.ga.gov.au/scientific-topics/minerals/critical-minerals"
+      ],
+      "federal-register": [
+        "https://www.federalregister.gov/documents/2026/06/25/2026-12797/improving-and-eliminating-regulations-blacksmith-shops",
+        "https://www.federalregister.gov/documents/2026/06/25/2026-12792/improving-and-eliminating-regulations-diesel-particulate-matter-emission-limits-in-underground-coal",
+        "https://www.federalregister.gov/documents/2026/06/24/2026-12738/royalty-for-oil-and-gas-lost-from-onshore-federal-and-indian-leases",
+        "https://www.federalregister.gov/documents/2026/06/24/2026-12734/oil-and-gas-leasing",
+        "https://www.federalregister.gov/documents/2026/06/24/2026-12662/petition-for-modification-of-application-of-existing-mandatory-safety-standards"
+      ],
       "china-rare-earth": [
-        "https://www.regcc.cn/zgxtjt/jtnew/list.shtml",
-        "https://www.regcc.cn/zgxtjt/cydt/202312/1d5c884928fc46beb1f41ea0bcc1793c.shtml",
-        "https://www.regcc.cn/zgxtjt/cydt/202311/dcdeb0ee2c964459b220534b0c07f55e.shtml",
-        "https://www.regcc.cn/zgxtjt/cydt/202301/3c58d2198d7049b59694bf2662da5750.shtml",
-        "https://www.regcc.cn/zgxtjt/cydt/202301/5a64f2a849af42719a79ea956eea199f.shtml",
-        "https://www.regcc.cn/zgxtjt/cydt/202301/83c1d41407954c0c9a49c728e2b99361.shtml",
-        "https://www.regcc.cn/zgxtjt/gsgg/202602/6528ae798564409ca7af05180539b185.shtml",
-        "https://www.regcc.cn/zgxtjt/gsgg/202602/8fa8d66241db4bf1a79701ec427e536b.shtml"
+        "https://www.regcc.cn/zgxtjt/jtnew/202606/54b71e6726bf4d9aa6a50783b2006882.shtml",
+        "https://www.regcc.cn/zgxtjt/jtnew/202606/c434b5f3bd724e049628dbd86a27ce82.shtml",
+        "https://www.regcc.cn/zgxtjt/jtnew/202606/532dee954fc64bf798cb9cb4849ef7b1.shtml",
+        "https://www.regcc.cn/zgxtjt/jtnew/202606/8c128d6073a3433f9a427eb1b9df5e8f.shtml",
+        "https://www.regcc.cn/zgxtjt/jtnew/202606/42211673463a4e03b361e63b02137df7.shtml"
+      ],
+      "fred": [
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM",
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PNICKUSDM",
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PZINCUSDM",
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PIORECRUSDM",
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PALUMUSDM"
+      ],
+      "third-party-public-price": [
+        "https://www.investing.com/commodities/zinc-historical-data",
+        "https://www.investing.com/commodities/iron-ore-62-cfr-futures-historical-data",
+        "https://www.investing.com/commodities/lithium-carbonate-99-min-china-futures-historical-data"
+      ],
+      "third-party-public-policy": [
+        "https://www.mining.com/commodity/rare-earth"
+      ],
+      "third-party-public-company": [
+        "https://www.mining.com/commodity/lithium",
+        "https://www.mining-technology.com/marketdata/iron-ore"
       ],
       "lme": [
         "https://www.lme.com/en/Metals/Non-ferrous/LME-Copper",
@@ -55,12 +151,96 @@
       ]
     },
     "warnings": [
+      "news_target_gap: usable 53/200, gap 147",
+      "policy_target_gap: usable 12/200, gap 188",
+      "price_target_gap: usable 8/200, gap 192",
       "source_limited_present: some original sources were reachable only as access/status notes",
-      "authorized_price_feed_required: LME/SHFE/Mysteel numeric history was not loaded from a licensed feed",
       "spglobal_access_limited: S&P Global RSS returned an access restriction in this environment"
     ],
     "source_mode": "real_first",
-    "index_dir": "data/runtime"
+    "index_dir": "data/runtime_qa"
+  },
+  "quantity_ingest": {
+    "index_dir": "data/runtime",
+    "documents": 1021,
+    "chunks": 3411,
+    "target_per_source_type": 200,
+    "target_total": 600,
+    "usable_evidence_by_source_type": {
+      "news": 316,
+      "policy": 442,
+      "price": 253
+    },
+    "source_limited_by_source_type": {
+      "news": 1,
+      "policy": 4,
+      "price": 5
+    },
+    "source_modes": {
+      "real_rss": 2212,
+      "source_limited": 10,
+      "real_html": 225,
+      "official_api": 708,
+      "public_visible_price": 250,
+      "third_party_public": 6
+    },
+    "coverage_audit": {
+      "news": {
+        "target": 200,
+        "usable_evidence_count": 316,
+        "source_limited_count": 1,
+        "gap": 0,
+        "meets_target": true
+      },
+      "policy": {
+        "target": 200,
+        "usable_evidence_count": 442,
+        "source_limited_count": 4,
+        "gap": 0,
+        "meets_target": true
+      },
+      "price": {
+        "target": 200,
+        "usable_evidence_count": 253,
+        "source_limited_count": 5,
+        "gap": 0,
+        "meets_target": true
+      },
+      "total": {
+        "target": 600,
+        "usable_evidence_count": 1011,
+        "source_limited_count": 10,
+        "gap": 0,
+        "meets_target": true
+      }
+    },
+    "source_mode": "existing_index"
+  },
+  "coverage_check": {
+    "has_audit": true,
+    "target_per_source_type": 200,
+    "target_total": 600,
+    "usable_total": 1011,
+    "source_limited_total": 10,
+    "meets_interview_quantity_target": true,
+    "by_type": {
+      "news": {
+        "usable": 316,
+        "target": 200,
+        "meets_target": true
+      },
+      "policy": {
+        "usable": 442,
+        "target": 200,
+        "meets_target": true
+      },
+      "price": {
+        "usable": 253,
+        "target": 200,
+        "meets_target": true
+      }
+    },
+    "note": "QA requires transparent full-quantity coverage audit. It does not count source_limited or discovery-only rows as usable evidence."
   },
   "frontend": {
     "passed": true,
@@ -88,20 +268,19 @@
     "total": 25,
     "passed": 25,
     "success_rate": 1.0,
-    "avg_elapsed_ms": 25.45,
-    "p95_elapsed_ms": 29.66,
-    "abstain_rate": 0.24,
-    "unique_answer_signatures": 24,
+    "avg_elapsed_ms": 92.59,
+    "p95_elapsed_ms": 138.88,
+    "abstain_rate": 0.2,
+    "unique_answer_signatures": 23,
     "rows": [
       {
         "question": "近 30 天铜矿供应风险和 LME 铜价有什么关系?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 37.22,
+        "elapsed_ms": 74.37,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
-          "direct_price_evidence_not_found"
+          "source_access_limited: iea, lme, mysteel, shfe"
         ],
         "evidence_count": 3,
         "citation_ok": true,
@@ -113,9 +292,9 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 29.66,
+        "elapsed_ms": 103.15,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr"
+          "source_access_limited: disr, iea, spglobal"
         ],
         "evidence_count": 5,
         "citation_ok": true,
@@ -125,14 +304,13 @@
       {
         "question": "镍项目投资现在主要看哪些价格和政策风险?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 29.27,
+        "elapsed_ms": 129.98,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
-        "evidence_count": 3,
+        "evidence_count": 5,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -140,14 +318,13 @@
       {
         "question": "铁矿石价格上涨是否说明中国钢厂需求恢复?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 26.65,
+        "elapsed_ms": 85.0,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
-        "evidence_count": 1,
+        "evidence_count": 2,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -157,12 +334,12 @@
         "expected": "ok",
         "actual": "limited",
         "passed": true,
-        "elapsed_ms": 29.69,
+        "elapsed_ms": 63.4,
         "warnings": [
-          "source_access_limited: disr, shfe",
-          "direct_policy_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal",
+          "direct_policy_change_evidence_not_found"
         ],
-        "evidence_count": 1,
+        "evidence_count": 2,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -170,14 +347,13 @@
       {
         "question": "锌价近期趋势如何?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 28.07,
+        "elapsed_ms": 89.99,
         "warnings": [
-          "source_access_limited: lme",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
-        "evidence_count": 3,
+        "evidence_count": 5,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -185,12 +361,11 @@
       {
         "question": "SHFE 碳酸锂趋势如何?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 28.11,
+        "elapsed_ms": 82.77,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, shfe, spglobal",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 3,
         "citation_ok": true,
@@ -202,9 +377,9 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 28.99,
+        "elapsed_ms": 97.29,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 5,
         "citation_ok": true,
@@ -216,9 +391,11 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 25.86,
-        "warnings": [],
-        "evidence_count": 1,
+        "elapsed_ms": 132.5,
+        "warnings": [
+          "source_access_limited: iea"
+        ],
+        "evidence_count": 2,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -228,9 +405,9 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 17.91,
+        "elapsed_ms": 87.75,
         "warnings": [
-          "source_access_limited: spglobal"
+          "source_access_limited: disr, iea, mysteel, spglobal"
         ],
         "evidence_count": 5,
         "citation_ok": true,
@@ -242,7 +419,7 @@
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 27.17,
+        "elapsed_ms": 45.78,
         "warnings": [
           "unsupported_or_missing_source: Peru community/conflict source not loaded",
           "no_relevant_evidence_above_threshold",
@@ -258,11 +435,10 @@
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 26.18,
+        "elapsed_ms": 44.87,
         "warnings": [
           "unsupported_or_missing_source: DRC country/policy source not loaded",
-          "no_relevant_evidence_above_threshold",
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 0,
         "citation_ok": true,
@@ -274,10 +450,9 @@
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 14.31,
+        "elapsed_ms": 76.9,
         "warnings": [
-          "unsupported_or_missing_source: DRC country/policy source not loaded",
-          "no_relevant_evidence_above_threshold"
+          "unsupported_or_missing_source: DRC country/policy source not loaded"
         ],
         "evidence_count": 0,
         "citation_ok": true,
@@ -289,7 +464,7 @@
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 14.71,
+        "elapsed_ms": 83.8,
         "warnings": [
           "unsupported_or_missing_source: Peru community/conflict source not loaded",
           "no_relevant_evidence_above_threshold",
@@ -305,11 +480,10 @@
         "expected": "abstain",
         "actual": "abstain",
         "passed": true,
-        "elapsed_ms": 26.97,
+        "elapsed_ms": 82.01,
         "warnings": [
           "unsupported_or_missing_source: DRC country/policy source not loaded",
-          "no_relevant_evidence_above_threshold",
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 0,
         "citation_ok": true,
@@ -321,12 +495,12 @@
         "expected": "ok",
         "actual": "limited",
         "passed": true,
-        "elapsed_ms": 27.22,
+        "elapsed_ms": 113.05,
         "warnings": [
-          "source_access_limited: disr, lme",
+          "source_access_limited: disr, iea, lme",
           "direct_policy_evidence_not_found"
         ],
-        "evidence_count": 2,
+        "evidence_count": 3,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -336,11 +510,11 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 26.39,
+        "elapsed_ms": 48.5,
         "warnings": [
           "source_access_limited: lme"
         ],
-        "evidence_count": 1,
+        "evidence_count": 2,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -350,11 +524,11 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 15.42,
+        "elapsed_ms": 141.38,
         "warnings": [
           "source_access_limited: disr, shfe"
         ],
-        "evidence_count": 1,
+        "evidence_count": 2,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -362,14 +536,13 @@
       {
         "question": "China rare earth traceability policy?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 27.39,
+        "elapsed_ms": 138.88,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, spglobal",
-          "direct_policy_evidence_not_found"
+          "source_access_limited: disr, iea, mysteel, spglobal"
         ],
-        "evidence_count": 3,
+        "evidence_count": 5,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -377,12 +550,11 @@
       {
         "question": "Mysteel iron ore and blast furnace utilization?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 28.84,
+        "elapsed_ms": 100.29,
         "warnings": [
-          "source_access_limited: china-rare-earth, disr, lme, mysteel, shfe, spglobal",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
         "evidence_count": 3,
         "citation_ok": true,
@@ -392,14 +564,13 @@
       {
         "question": "LME zinc mine disruption impact?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 28.14,
+        "elapsed_ms": 91.87,
         "warnings": [
-          "source_access_limited: lme",
-          "direct_price_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe"
         ],
-        "evidence_count": 3,
+        "evidence_count": 5,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -409,7 +580,7 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 25.74,
+        "elapsed_ms": 40.32,
         "warnings": [
           "source_access_limited: lme"
         ],
@@ -420,15 +591,14 @@
       },
       {
         "question": "Lithium port scheduling risk at Pilbara?",
-        "expected": "abstain",
-        "actual": "abstain",
+        "expected": "ok",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 26.64,
+        "elapsed_ms": 125.18,
         "warnings": [
-          "no_relevant_evidence_above_threshold",
-          "source_access_limited: shfe"
+          "source_access_limited: iea"
         ],
-        "evidence_count": 0,
+        "evidence_count": 1,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false
@@ -438,7 +608,7 @@
         "expected": "ok",
         "actual": "ok",
         "passed": true,
-        "elapsed_ms": 15.13,
+        "elapsed_ms": 55.48,
         "warnings": [
           "source_access_limited: lme"
         ],
@@ -450,14 +620,13 @@
       {
         "question": "Critical minerals permitting risk?",
         "expected": "ok",
-        "actual": "limited",
+        "actual": "ok",
         "passed": true,
-        "elapsed_ms": 24.63,
+        "elapsed_ms": 180.15,
         "warnings": [
-          "source_access_limited: disr",
-          "direct_policy_evidence_not_found"
+          "source_access_limited: disr, iea, lme, mysteel, shfe, spglobal"
         ],
-        "evidence_count": 2,
+        "evidence_count": 5,
         "citation_ok": true,
         "debug_leak": false,
         "fixture_links": false

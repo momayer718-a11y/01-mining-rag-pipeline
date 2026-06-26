@@ -5,5 +5,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 data/runtime/
+data/runtime_*/
+data/cache/
+data/raw/prices/*.csv
+!data/raw/prices/README.md
 outputs/*.log
+outputs/server.*
 qa/reports/*.tmp

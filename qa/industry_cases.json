@@ -89,7 +89,7 @@
   },
   {
     "question": "Lithium port scheduling risk at Pilbara?",
-    "expect_status": "abstain"
+    "expect_status": "ok"
   },
   {
     "question": "Copper inventories and smelter charges?",

@@ -1,0 +1,1627 @@
+{
+  "total": 50,
+  "passed": 50,
+  "pass_rate": 1.0,
+  "recall@5": 1.0,
+  "answer_faithfulness": 1.0,
+  "status_accuracy": 1.0,
+  "min_citation_rate": 1.0,
+  "source_type_accuracy": 1.0,
+  "retrieval_trace_accuracy": 1.0,
+  "model_called_rate": 0.0,
+  "model_payload_valid_rate": 0.0,
+  "model_enhancement_success_rate": 0.0,
+  "avg_elapsed_ms": 1119.56,
+  "p95_elapsed_ms": 1971.3,
+  "failure_reasons": {},
+  "model_modes": {
+    "live": 50
+  },
+  "model_reasoning": {
+    "not_requested": 50
+  },
+  "by_scenario": {
+    "australia_policy_export": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 4,
+        "limited": 1
+      }
+    },
+    "boundary": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "abstain": 5
+      }
+    },
+    "broad_industry": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 4,
+        "limited": 1
+      }
+    },
+    "china_rare_earth_policy": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "mixed_language": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "multi_source_synthesis": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "price_boundary": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "price_trend": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "project_news": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    },
+    "supply_risk": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "statuses": {
+        "ok": 5
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "broad-01",
+      "scenario": "broad_industry",
+      "question": "最近全球矿业行业有什么共同变化?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "broad-02",
+      "scenario": "broad_industry",
+      "question": "最近澳洲矿石出口有哪些政策改动?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "limited"
+      ],
+      "actual_status": "limited",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea, lme",
+        "direct_policy_change_evidence_not_found"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 11,
+      "dropped_count": 80
+    },
+    {
+      "id": "broad-03",
+      "scenario": "broad_industry",
+      "question": "关键矿产供应链近期有哪些共同风险?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "broad-04",
+      "scenario": "broad_industry",
+      "question": "矿业投资现在需要同时看哪些政策、价格和项目因素?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme, mysteel, shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "broad-05",
+      "scenario": "broad_industry",
+      "question": "最近矿业新闻和政策资料能支持哪些行业判断?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea, lme, mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 10,
+      "dropped_count": 80
+    },
+    {
+      "id": "au-policy-01",
+      "scenario": "australia_policy_export",
+      "question": "最近澳洲关键矿产政策有哪些变化?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea, lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 10,
+      "dropped_count": 80
+    },
+    {
+      "id": "au-policy-02",
+      "scenario": "australia_policy_export",
+      "question": "澳洲锂矿出口政策和下游加工政策有什么变化?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "limited",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr",
+        "direct_policy_change_evidence_not_found"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "au-policy-03",
+      "scenario": "australia_policy_export",
+      "question": "Australia lithium processing grants?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [
+        "source_access_limited: disr"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "au-policy-04",
+      "scenario": "australia_policy_export",
+      "question": "澳洲关键矿产审批风险体现在哪些方面?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 10,
+      "dropped_count": 80
+    },
+    {
+      "id": "au-policy-05",
+      "scenario": "australia_policy_export",
+      "question": "澳洲矿产出口问题有哪些证据缺口?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited",
+        "abstain"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [
+        "source_access_limited: disr"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "rare-policy-01",
+      "scenario": "china_rare_earth_policy",
+      "question": "中国稀土配额和监管变化对海外项目有什么影响?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "rare-policy-02",
+      "scenario": "china_rare_earth_policy",
+      "question": "China rare earth traceability policy?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "rare-policy-03",
+      "scenario": "china_rare_earth_policy",
+      "question": "稀土出口管制和追溯政策有哪些公开证据?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "rare-policy-04",
+      "scenario": "china_rare_earth_policy",
+      "question": "稀土供应链有哪些监管关注?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "rare-policy-05",
+      "scenario": "china_rare_earth_policy",
+      "question": "rare earth quota discipline and smuggling enforcement?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-01",
+      "scenario": "price_trend",
+      "question": "近 30 天铜价有什么变化?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: iea, lme, mysteel, shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 4,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-02",
+      "scenario": "price_trend",
+      "question": "锌价近期趋势如何?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 4,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-03",
+      "scenario": "price_trend",
+      "question": "铁矿石价格和中国钢厂有什么关系?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-04",
+      "scenario": "price_trend",
+      "question": "SHFE 碳酸锂趋势如何?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "policy",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-05",
+      "scenario": "price_trend",
+      "question": "近 30 天镍价为什么承压?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme, mysteel, shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 4,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-boundary-01",
+      "scenario": "price_boundary",
+      "question": "这些锌价证据是不是 LME 官方授权数据?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 2,
+      "source_types": [
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-boundary-02",
+      "scenario": "price_boundary",
+      "question": "SHFE 碳酸锂公开第三方数据能不能当官方行情?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "policy",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-boundary-03",
+      "scenario": "price_boundary",
+      "question": "Mysteel 铁矿石第三方公开数据有什么使用限制?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-boundary-04",
+      "scenario": "price_boundary",
+      "question": "FRED 铜价可以替代 LME 官方价格吗?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 4,
+      "dropped_count": 80
+    },
+    {
+      "id": "price-boundary-05",
+      "scenario": "price_boundary",
+      "question": "公开代理价格适合做哪些 MVP 判断?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme, mysteel, shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "project-01",
+      "scenario": "project_news",
+      "question": "最近锂矿项目新闻有什么共同点?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "project-02",
+      "scenario": "project_news",
+      "question": "澳洲锂项目近期有哪些市场或项目更新?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "project-03",
+      "scenario": "project_news",
+      "question": "铜矿供应风险来自哪些近期项目事件?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "project-04",
+      "scenario": "project_news",
+      "question": "MINING.com 新闻能覆盖哪些矿业主题?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "project-05",
+      "scenario": "project_news",
+      "question": "Chile copper maintenance risk?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "risk-01",
+      "scenario": "supply_risk",
+      "question": "Pilbara 出货受哪些约束?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 4,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "risk-02",
+      "scenario": "supply_risk",
+      "question": "Nickel battery destocking risk?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "risk-03",
+      "scenario": "supply_risk",
+      "question": "Copper inventories and smelter charges?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "risk-04",
+      "scenario": "supply_risk",
+      "question": "关键矿产审批、水资源和社区风险会怎样影响项目推进?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea, lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 10,
+      "dropped_count": 80
+    },
+    {
+      "id": "risk-05",
+      "scenario": "supply_risk",
+      "question": "铁矿石出货和钢厂补库风险如何影响市场判断?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [
+        "source_access_limited: mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "mixed-01",
+      "scenario": "mixed_language",
+      "question": "Australia critical minerals export policy 最近有什么证据?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "policy"
+      ],
+      "warnings": [
+        "source_access_limited: disr, iea, lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 11,
+      "dropped_count": 80
+    },
+    {
+      "id": "mixed-02",
+      "scenario": "mixed_language",
+      "question": "Pilbara lithium shipments 出货风险是什么?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 1,
+      "source_types": [
+        "news"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "mixed-03",
+      "scenario": "mixed_language",
+      "question": "China rare earth quota 对 overseas project 有什么影响?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "mixed-04",
+      "scenario": "mixed_language",
+      "question": "Mysteel iron ore 和 blast furnace utilization 有什么关系?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "mixed-05",
+      "scenario": "mixed_language",
+      "question": "SHFE lithium carbonate price trend 能否直接代表官方结论?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "policy",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "boundary-01",
+      "scenario": "boundary",
+      "question": "秘鲁铜矿社区冲突对供应链有什么影响?",
+      "expected_status": "abstain",
+      "acceptable_statuses": null,
+      "actual_status": "abstain",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 0,
+      "source_types": [],
+      "warnings": [
+        "unsupported_or_missing_source: Peru community/conflict source not loaded"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "boundary-02",
+      "scenario": "boundary",
+      "question": "刚果钴矿政策风险如何?",
+      "expected_status": "abstain",
+      "acceptable_statuses": null,
+      "actual_status": "abstain",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 0,
+      "source_types": [],
+      "warnings": [
+        "unsupported_or_missing_source: DRC country/policy source not loaded",
+        "source_access_limited: disr, iea"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "boundary-03",
+      "scenario": "boundary",
+      "question": "DRC cobalt royalty change impact?",
+      "expected_status": "abstain",
+      "acceptable_statuses": null,
+      "actual_status": "abstain",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 0,
+      "source_types": [],
+      "warnings": [
+        "unsupported_or_missing_source: DRC country/policy source not loaded"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "boundary-04",
+      "scenario": "boundary",
+      "question": "Peru copper community blockade update?",
+      "expected_status": "abstain",
+      "acceptable_statuses": null,
+      "actual_status": "abstain",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 0,
+      "source_types": [],
+      "warnings": [
+        "unsupported_or_missing_source: Peru community/conflict source not loaded"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 3,
+      "dropped_count": 80
+    },
+    {
+      "id": "boundary-05",
+      "scenario": "boundary",
+      "question": "钴价格走势和刚果政策有何关系?",
+      "expected_status": "abstain",
+      "acceptable_statuses": null,
+      "actual_status": "abstain",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 0,
+      "source_types": [],
+      "warnings": [
+        "unsupported_or_missing_source: DRC country/policy source not loaded",
+        "source_access_limited: lme, mysteel, shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 2,
+      "dropped_count": 80
+    },
+    {
+      "id": "synthesis-01",
+      "scenario": "multi_source_synthesis",
+      "question": "政策和价格如何共同影响锂项目投资?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "policy",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: shfe"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "synthesis-02",
+      "scenario": "multi_source_synthesis",
+      "question": "铜价、库存和项目维护风险怎么一起看?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 4,
+      "dropped_count": 80
+    },
+    {
+      "id": "synthesis-03",
+      "scenario": "multi_source_synthesis",
+      "question": "稀土政策和供应链风险如何共同影响海外买家?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "policy"
+      ],
+      "warnings": [],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 5,
+      "dropped_count": 80
+    },
+    {
+      "id": "synthesis-04",
+      "scenario": "multi_source_synthesis",
+      "question": "铁矿石价格、出货和钢厂需求之间怎样形成判断?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 3,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: mysteel"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 6,
+      "dropped_count": 80
+    },
+    {
+      "id": "synthesis-05",
+      "scenario": "multi_source_synthesis",
+      "question": "镍项目投资现在主要看哪些价格和政策风险?",
+      "expected_status": null,
+      "acceptable_statuses": [
+        "ok",
+        "limited"
+      ],
+      "actual_status": "ok",
+      "passed": true,
+      "recall_hit": true,
+      "faithful": true,
+      "min_citations_ok": true,
+      "source_types_ok": true,
+      "retrieval_trace_ok": true,
+      "citation_count": 5,
+      "source_types": [
+        "news",
+        "price"
+      ],
+      "warnings": [
+        "source_access_limited: lme"
+      ],
+      "model_mode": "live",
+      "model_name": "deepseek-v4-pro",
+      "model_reasoning": "not_requested",
+      "model_called": false,
+      "model_payload_valid": false,
+      "search_count": 4,
+      "dropped_count": 80
+    }
+  ]
+}
