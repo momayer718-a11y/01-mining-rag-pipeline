@@ -216,17 +216,37 @@ def test_recent_broad_query_ignores_stale_frontend_days(monkeypatch) -> None:
     assert result["retrieval_trace"]["requested_days"] == 7
 
 
-def test_australia_lithium_export_news_remains_limited_without_direct_export(monkeypatch) -> None:
+def test_australia_lithium_export_news_remains_limited_without_direct_export(monkeypatch, tmp_path: Path) -> None:
     _disable_live_model(monkeypatch)
-    result = query("近 7 天澳洲锂出口有哪些新闻", top_k=5, days=7, index_dir="data/runtime")
+    doc = DocumentRecord(
+        id="au-lithium-news",
+        source="mining-news",
+        source_type="news",
+        title="Australia lithium project update",
+        url="https://example.com/australia-lithium-project",
+        published_at="2026-06-24",
+        content="Australia lithium project update: lithium miners discussed downstream processing, battery demand, project financing and approvals. The article focuses on market background and project economics.",
+        metadata={"source_mode": "real_rss", "commodity": "lithium", "region": "australia", "evidence_kind": "source_text"},
+    )
+    index_dir = tmp_path / "runtime"
+    LocalVectorStore(index_dir).write([doc], split_documents([doc]))
+    result = query("近 7 天澳洲锂出口有哪些新闻", top_k=5, days=7, index_dir=str(index_dir))
     assert result["status"] == "limited"
     assert result["citations"]
     assert "direct_export_evidence_not_found" in result["warnings"]
 
 
-def test_copper_price_uses_public_visible_or_proxy_price_source(monkeypatch) -> None:
+def test_copper_price_uses_public_visible_or_proxy_price_source(monkeypatch, tmp_path: Path) -> None:
     _disable_live_model(monkeypatch)
-    result = query("近 30 天铜价有什么变化", top_k=5, days=30, index_dir="data/runtime")
+    doc = _fred_price_doc(
+        {"series": "PCOPPUSDM", "commodity": "copper", "label": "Global copper price", "unit": "USD per metric ton"},
+        "2026-05-01",
+        "13483.75",
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=PCOPPUSDM",
+    )
+    index_dir = tmp_path / "runtime"
+    LocalVectorStore(index_dir).write([doc], split_documents([doc]))
+    result = query("近 30 天铜价有什么变化", top_k=5, days=30, index_dir=str(index_dir))
     assert result["status"] in {"ok", "limited"}
     if result["citations"]:
         assert result["citations"][0]["source_type"] == "price"
