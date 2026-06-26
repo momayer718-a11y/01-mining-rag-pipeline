@@ -66,7 +66,8 @@ Debug fields such as matched terms, relevance scores and raw hits stay in the fo
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-make ingest
+make test
+make qa
 make serve
 ```
 
@@ -80,13 +81,15 @@ docker compose up --build
 
 The Docker command runs real-first ingestion before starting the Web console.
 
+The repository includes a compact `data/runtime` index so the API, console, unit tests and QA can run immediately after clone. Use `make ingest` only when you want to refresh the runtime from currently reachable public sources.
+
 Full quantity-target ingestion:
 
 ```bash
 make ingest-full
 ```
 
-This runs with `TARGET_PER_SOURCE_TYPE=200` and writes `data/runtime_full`. Runtime depends on current network reachability, public source availability and any authorized price files or API endpoints you provide.
+This runs with `TARGET_PER_SOURCE_TYPE=200` and writes `data/runtime_full`. Runtime depends on current network reachability, public source availability and any authorized price files or API endpoints you provide. If official LME/SHFE/Mysteel price feeds are not authorized, QA treats those price rows as a source boundary and checks that price answers remain labelled, limited or abstained instead of pretending to be official exchange/vendor data.
 
 ## Price Data
 
@@ -179,6 +182,8 @@ make smoke
 - Price-source gaps return `limited` or `abstain` warnings.
 - Frontend text has the expected labels `命中段` / `概括` and no placeholder/debug leakage.
 - Coverage audit is present and distinguishes usable evidence from access-status rows.
+
+Fresh QA artifacts are written under `outputs/generated/` by default. Set `QA_UPDATE_TRACKED_REPORTS=1` only when intentionally refreshing the checked-in `QA_REPORT.md` and `qa/reports/*.json` snapshots.
 
 The latest 50-case generalization eval covers broad industry summaries, Australia export/policy questions, China rare-earth policy, price trend and price-boundary questions, project news, supply-chain risk, mixed Chinese/English prompts, abstention, and multi-source synthesis. The latest checked report is `eval/generalization_50_report.json`: 50/50 passed, pass rate 1.0, answer faithfulness 1.0, retrieval trace accuracy 1.0, average first-answer latency 1119.56 ms and p95 first-answer latency 1971.3 ms.
 

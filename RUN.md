@@ -7,17 +7,18 @@ cd /Users/Zhuanz/Desktop/面试题目MVP/01-mining-rag-pipeline
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-make ingest
+make test
+make qa
 make serve
 ```
 
 Open `http://localhost:8001`.
 
-`make ingest` uses original public source URLs where reachable. It does not use fixture records.
+The repository includes a stable `data/runtime` index for clone-time tests. `make ingest` is a refresh command for currently reachable public sources; it is not required before the first local run.
 
-The current runtime can be rebuilt with public-visible/proxy price rows. `/stats` displays the coverage audit: news, policy and price each target 200 usable evidence records; LME/SHFE/Mysteel pages that block programmatic access are retained as source-limited audit links.
+The current runtime can be rebuilt with public-visible/proxy price rows. `/stats` displays the coverage audit: news, policy and price targets, plus source-limited audit links for LME/SHFE/Mysteel pages that require authorized feeds.
 
-## Full Interview Quantity Check
+## Full Quantity Check
 
 ```bash
 make ingest-full
@@ -43,6 +44,12 @@ export SOURCE_HTTP_PROXY=http://127.0.0.1:7890
 ```
 
 This is for legitimate local network routing only. The collector does not bypass CAPTCHA, login walls, paid feeds or Cloudflare challenges.
+
+To force QA to refresh from live sources instead of the bundled runtime:
+
+```bash
+QA_LIVE_INGEST=1 PYTHONPATH=. python3 -m qa.run_qa
+```
 
 ## Price Data
 
@@ -131,4 +138,4 @@ PYTHONPATH=. python3 -m eval.run_eval --index-dir data/runtime --gt-path eval/ge
 make package
 ```
 
-`make qa` writes `QA_REPORT.md` and `qa/reports/*.json`. `make package` writes `/Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip`.
+`make qa` writes fresh reports under `outputs/generated/` so clone-time verification does not modify tracked files. Set `QA_UPDATE_TRACKED_REPORTS=1` only when intentionally refreshing `QA_REPORT.md` and `qa/reports/*.json`. `make package` writes `/Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip`.

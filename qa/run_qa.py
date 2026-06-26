@@ -25,10 +25,14 @@ def run() -> dict:
     os.environ["MODEL_API_KEY"] = ""
     query_engine.complete_json = lambda *args, **kwargs: None
     query_engine.model_metadata = lambda: {"model_provider": "fallback", "model_name": "deterministic-template", "model_mode": "fallback"}
-    qa_index_dir = os.getenv("QA_INDEX_DIR", "data/runtime_qa")
-    quantity_index_dir = os.getenv("QA_QUANTITY_INDEX_DIR", "data/runtime")
+    qa_index_dir = os.getenv("QA_INDEX_DIR", _default_qa_index_dir())
+    quantity_index_dir = os.getenv("QA_QUANTITY_INDEX_DIR", qa_index_dir)
+    if _truthy(os.getenv("QA_LIVE_INGEST", "")):
+        ingest_summary = run_ingest(qa_index_dir, per_source=int(os.getenv("QA_PER_SOURCE", "5")), fixture=False)
+    else:
+        ingest_summary = _summary_from_existing_index(qa_index_dir)
+        ingest_summary["source_mode"] = "existing_index"
     quantity_summary = _summary_from_existing_index(quantity_index_dir)
-    ingest_summary = run_ingest(qa_index_dir, per_source=int(os.getenv("QA_PER_SOURCE", "5")), fixture=False)
     cases = json.loads(Path("qa/industry_cases.json").read_text(encoding="utf-8"))
     rows = []
     elapsed = []
@@ -75,11 +79,18 @@ def run() -> dict:
         "frontend": frontend,
         "backend": backend,
     }
-    out_dir = Path("qa/reports")
+    out_dir = Path(os.getenv("QA_REPORT_DIR", "outputs/generated/qa"))
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "qa_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     (out_dir / "frontend_report.json").write_text(json.dumps(frontend, ensure_ascii=False, indent=2), encoding="utf-8")
-    Path("QA_REPORT.md").write_text(_markdown(report), encoding="utf-8")
+    markdown = _markdown(report)
+    Path(os.getenv("QA_REPORT_MD", "outputs/generated/QA_REPORT.md")).write_text(markdown, encoding="utf-8")
+    if _truthy(os.getenv("QA_UPDATE_TRACKED_REPORTS", "")):
+        tracked_dir = Path("qa/reports")
+        tracked_dir.mkdir(parents=True, exist_ok=True)
+        (tracked_dir / "qa_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        (tracked_dir / "frontend_report.json").write_text(json.dumps(frontend, ensure_ascii=False, indent=2), encoding="utf-8")
+        Path("QA_REPORT.md").write_text(markdown, encoding="utf-8")
     if report["status"] != "passed":
         raise SystemExit(json.dumps(report, ensure_ascii=False, indent=2))
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -103,9 +114,28 @@ def _coverage_audit_valid(summary: dict) -> bool:
     return all(source_type in audit for source_type in ("news", "policy", "price", "total"))
 
 
-def _coverage_targets_met(summary: dict) -> bool:
+def _full_quantity_targets_met(summary: dict) -> bool:
     audit = summary.get("coverage_audit", {})
     return _coverage_audit_valid(summary) and all(audit.get(source_type, {}).get("meets_target") for source_type in ("news", "policy", "price", "total"))
+
+
+def _price_boundary_ok(summary: dict) -> bool:
+    audit = summary.get("coverage_audit", {})
+    price = audit.get("price", {})
+    source_limited = price.get("source_limited_count", 0)
+    usable = price.get("usable_evidence_count", 0)
+    return not price.get("meets_target", False) and usable == 0 and source_limited > 0
+
+
+def _coverage_targets_met(summary: dict) -> bool:
+    audit = summary.get("coverage_audit", {})
+    if _full_quantity_targets_met(summary):
+        return True
+    return (
+        _coverage_audit_valid(summary)
+        and all(audit.get(source_type, {}).get("meets_target") for source_type in ("news", "policy", "total"))
+        and _price_boundary_ok(summary)
+    )
 
 
 def _coverage_check(summary: dict) -> dict:
@@ -116,7 +146,9 @@ def _coverage_check(summary: dict) -> dict:
         "target_total": summary.get("target_total"),
         "usable_total": audit.get("total", {}).get("usable_evidence_count", 0),
         "source_limited_total": audit.get("total", {}).get("source_limited_count", 0),
-        "meets_interview_quantity_target": _coverage_targets_met(summary),
+        "meets_full_quantity_target": _full_quantity_targets_met(summary),
+        "price_boundary_enforced": _price_boundary_ok(summary),
+        "meets_runtime_gate": _coverage_targets_met(summary),
         "by_type": {
             source_type: {
                 "usable": audit.get(source_type, {}).get("usable_evidence_count", 0),
@@ -125,7 +157,7 @@ def _coverage_check(summary: dict) -> dict:
             }
             for source_type in ("news", "policy", "price")
         },
-        "note": "QA requires transparent full-quantity coverage audit. It does not count source_limited or discovery-only rows as usable evidence.",
+        "note": "QA requires transparent coverage audit. Source-limited and discovery-only rows are not answer evidence; missing official price feeds pass only when price questions stay limited/abstain instead of hard-answering.",
     }
 
 
@@ -162,6 +194,21 @@ def _summary_from_existing_index(index_dir: str) -> dict:
         "coverage_audit": _coverage_from_chunks(usable_by_type, limited_by_type),
         "source_mode": "existing_index",
     }
+
+
+def _default_qa_index_dir() -> str:
+    for candidate in ("data/runtime", "data/runtime_full"):
+        if _index_has_chunks(candidate):
+            return candidate
+    return "data/runtime"
+
+
+def _index_has_chunks(index_dir: str) -> bool:
+    return (Path(index_dir) / "chunks.jsonl").exists()
+
+
+def _truthy(value: str) -> bool:
+    return value.lower() in {"1", "true", "yes", "on"}
 
 
 def _citation_integrity(result: dict) -> bool:

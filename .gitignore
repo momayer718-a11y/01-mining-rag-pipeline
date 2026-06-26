@@ -5,10 +5,15 @@ __pycache__/
 *.pyc
 .pytest_cache/
 data/runtime/
+!data/runtime/
+!data/runtime/documents.jsonl
+!data/runtime/chunks.jsonl
+!data/runtime/collection_snapshot.json
 data/runtime_*/
 data/cache/
 data/raw/prices/*.csv
 !data/raw/prices/README.md
 outputs/*.log
 outputs/server.*
+outputs/generated/
 qa/reports/*.tmp
