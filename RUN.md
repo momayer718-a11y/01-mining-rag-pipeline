@@ -116,6 +116,12 @@ python3 -m serve.query_engine "近 7 天澳洲锂出口政策有何变化?"
 
 Fixture mode is for offline deterministic tests only. Normal Docker, `make ingest` and the Web console use real-first ingestion.
 
+For a full deterministic local smoke check from a fresh clone:
+
+```bash
+make smoke
+```
+
 ## QA And Package
 
 ```bash

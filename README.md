@@ -166,6 +166,12 @@ PYTHONPATH=. python3 -m eval.run_eval --index-dir data/runtime --gt-path eval/ge
 make package
 ```
 
+For a deterministic local smoke check without relying on live collection, run:
+
+```bash
+make smoke
+```
+
 `make qa` runs 25 industry generalization cases against the real-first index and verifies:
 
 - No `fixture.local` citation links.

@@ -16,8 +16,7 @@ DIRECT_PRICE_MODES = {"authorized_csv", "authorized_api", "public_visible_price"
 
 def ensure_index(index_dir: str = "data/runtime") -> None:
     chunks_path = Path(index_dir) / "chunks.jsonl"
-    default_runtime = Path(index_dir) == Path("data/runtime")
-    if not chunks_path.exists() or (default_runtime and _fixture_only_index(index_dir)):
+    if not chunks_path.exists():
         run_ingest(out=index_dir, per_source=20, fixture=False)
 
 

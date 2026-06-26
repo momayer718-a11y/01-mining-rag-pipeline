@@ -1,4 +1,4 @@
-.PHONY: ingest ingest-full fixture-ingest import-price-csv serve eval test qa package demo
+.PHONY: ingest ingest-full fixture-ingest import-price-csv serve eval test qa package demo smoke
 
 ingest:
 	python3 -m pipeline.ingest --out data/runtime --per-source 20
@@ -28,5 +28,7 @@ package:
 	rm -f /Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip
 	cd .. && zip -qr /Users/Zhuanz/Desktop/01-mining-rag-pipeline-tool.zip 01-mining-rag-pipeline -x '01-mining-rag-pipeline/.git/*' '01-mining-rag-pipeline/.env' '01-mining-rag-pipeline/.env.local' '01-mining-rag-pipeline/.venv/*' '01-mining-rag-pipeline/.pytest_cache/*' '01-mining-rag-pipeline/**/__pycache__/*' '01-mining-rag-pipeline/data/cache/*' '01-mining-rag-pipeline/data/runtime*/*' '01-mining-rag-pipeline/data/raw/prices/*.csv' '01-mining-rag-pipeline/outputs/*.log' '01-mining-rag-pipeline/outputs/server.*'
 
-demo: ingest eval
+demo: fixture-ingest
 	python3 -m serve.query_engine "近 7 天澳洲锂出口政策有何变化?"
+
+smoke: fixture-ingest test demo

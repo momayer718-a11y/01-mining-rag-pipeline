@@ -196,9 +196,43 @@ def test_model_thinking_disabled_by_default(monkeypatch) -> None:
         assert meta["model_reasoning"] == "not_requested"
 
 
-def test_broad_australia_export_policy_has_trace_and_limited_quality(monkeypatch) -> None:
+def test_broad_australia_export_policy_has_trace_and_limited_quality(monkeypatch, tmp_path: Path) -> None:
     _disable_live_model(monkeypatch)
-    result = query("最近澳洲矿石出口有哪些政策改动", top_k=5, index_dir="data/runtime")
+    docs = [
+        DocumentRecord(
+            id="australia-policy-background",
+            source="policy-source",
+            source_type="policy",
+            title="Australia critical minerals policy background",
+            url="https://example.com/australia-critical-minerals-policy",
+            published_at="2026-06-24",
+            content="Australia critical minerals policy background: financing, processing grants, approvals, water use and project permitting remain important for lithium, copper and nickel projects.",
+            metadata={"source_mode": "official_api", "region": "australia", "commodity": "critical minerals", "evidence_kind": "source_text"},
+        ),
+        DocumentRecord(
+            id="australia-news-background",
+            source="news-source",
+            source_type="news",
+            title="Australia mining investment update",
+            url="https://example.com/australia-mining-investment",
+            published_at="2026-06-24",
+            content="Australia mining investment update: miners are watching critical minerals project financing, downstream processing capacity and approvals for resources projects.",
+            metadata={"source_mode": "real_rss", "region": "australia", "commodity": "critical minerals", "evidence_kind": "source_text"},
+        ),
+        DocumentRecord(
+            id="australia-status-note",
+            source="status-source",
+            source_type="policy",
+            title="Australia source status note",
+            url="https://example.com/australia-status",
+            published_at="2026-06-24",
+            content="Australia critical minerals source status note for audit only.",
+            metadata={"source_mode": "source_limited", "region": "australia", "commodity": "critical minerals", "evidence_kind": "source_status"},
+        ),
+    ]
+    index_dir = tmp_path / "runtime"
+    LocalVectorStore(index_dir).write(docs, split_documents(docs))
+    result = query("最近澳洲矿石出口有哪些政策改动", top_k=5, index_dir=str(index_dir))
     assert result["intent"]["domain"] == "broad_mining"
     assert result["intent"]["days"] == 30
     assert result["status"] in {"limited", "abstain"}
@@ -209,9 +243,21 @@ def test_broad_australia_export_policy_has_trace_and_limited_quality(monkeypatch
     assert "direct_policy_change_evidence_not_found" in result["warnings"] or "broad_query_evidence_thin" in result["warnings"]
 
 
-def test_recent_broad_query_ignores_stale_frontend_days(monkeypatch) -> None:
+def test_recent_broad_query_ignores_stale_frontend_days(monkeypatch, tmp_path: Path) -> None:
     _disable_live_model(monkeypatch)
-    result = query("最近澳洲关键矿产政策有哪些变化", top_k=5, days=7, index_dir="data/runtime")
+    doc = DocumentRecord(
+        id="australia-critical-minerals-policy",
+        source="policy-source",
+        source_type="policy",
+        title="Australia critical minerals policy background",
+        url="https://example.com/australia-critical-minerals-policy",
+        published_at="2026-06-24",
+        content="Australia critical minerals policy background: processing grants, approvals and project financing are recurring policy themes.",
+        metadata={"source_mode": "official_api", "region": "australia", "commodity": "critical minerals", "evidence_kind": "source_text"},
+    )
+    index_dir = tmp_path / "runtime"
+    LocalVectorStore(index_dir).write([doc], split_documents([doc]))
+    result = query("最近澳洲关键矿产政策有哪些变化", top_k=5, days=7, index_dir=str(index_dir))
     assert result["intent"]["days"] == 30
     assert result["retrieval_trace"]["requested_days"] == 7
 
@@ -253,8 +299,32 @@ def test_copper_price_uses_public_visible_or_proxy_price_source(monkeypatch, tmp
         assert "direct_price_evidence_not_found" not in result["warnings"]
 
 
-def test_pilbara_shipment_has_multiple_citations_or_limited(monkeypatch) -> None:
+def test_pilbara_shipment_has_multiple_citations_or_limited(monkeypatch, tmp_path: Path) -> None:
     _disable_live_model(monkeypatch)
-    result = query("Pilbara 出货受哪些约束?", top_k=5, index_dir="data/runtime")
+    docs = [
+        DocumentRecord(
+            id="pilbara-shipment-port",
+            source="news-source",
+            source_type="news",
+            title="Pilbara lithium shipment port update",
+            url="https://example.com/pilbara-shipment-port",
+            published_at="2026-06-24",
+            content="Pilbara lithium shipments can be constrained by port scheduling, shipping logistics, offtake timing and spodumene concentrate handling.",
+            metadata={"source_mode": "real_rss", "region": "pilbara", "commodity": "lithium", "evidence_kind": "source_text"},
+        ),
+        DocumentRecord(
+            id="pilbara-logistics",
+            source="news-source",
+            source_type="news",
+            title="Pilbara spodumene logistics update",
+            url="https://example.com/pilbara-logistics",
+            published_at="2026-06-23",
+            content="Pilbara spodumene concentrate movement depends on rail availability, port throughput, weather windows and customer offtake schedules.",
+            metadata={"source_mode": "real_rss", "region": "pilbara", "commodity": "lithium", "evidence_kind": "source_text"},
+        ),
+    ]
+    index_dir = tmp_path / "runtime"
+    LocalVectorStore(index_dir).write(docs, split_documents(docs))
+    result = query("Pilbara 出货受哪些约束?", top_k=5, index_dir=str(index_dir))
     assert result["status"] == "limited" or len(result["citations"]) >= 2
     assert "rerank" in result["retrieval_trace"]
